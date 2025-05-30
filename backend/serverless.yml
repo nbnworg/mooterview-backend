@@ -1,0 +1,58 @@
+service: mooterview-backend
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  region: us-east-1
+  profile: ${self:custom.profiles.${opt:stage, 'sandbox'}}
+  environment:
+    USER_POOL_ID: ${self:custom.userpools.poolid.${opt:stage, 'sandbox'}}
+    CLIENT_ID: ${self:custom.userpools.clientid.${opt:stage, 'sandbox'}}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:PutItem
+        - dynamodb:GetItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+        - dynamodb:Scan
+        - dynamodb:Query
+      Resource: "*"
+
+    - Effect: Allow
+      Action:
+        - cognito-idp:AdminCreateUser
+        - cognito-idp:AdminDeleteUser
+        - cognito-idp:AdminUpdateUserAttributes
+        - cognito-idp:AdminGetUser
+        - cognito-idp:AdminInitiateAuth
+        - cognito-idp:AdminSetUserPassword
+      Resource: arn:aws:cognito-idp:us-east-1:${self:custom.accountIds.${opt:stage, 'sandbox'}}:userpool/${self:custom.userpools.poolid.${opt:stage, 'sandbox'}}
+custom:
+  accountIds:
+    production: "747136956388"
+    sandbox: "061051226351"
+  profiles:
+    production: NBNW_Old_permissions-747136956388
+    sandbox: AdministratorAccess-061051226351
+  userpools:
+    poolid:
+      sandbox: us-east-1_YdyOikAeJ
+    clientid:
+      sandbox: 3kv5sves5oegd1qu06632j24mi
+  functionNames:
+    production: Mooterview-Backend
+    sandbox: Mooterview-Backend
+
+functions:
+  app:
+    name: ${self:custom.functionNames.${opt:stage, 'sandbox'}}
+    handler: dist/app.handler
+    events:
+      # users
+      - http:
+          path: /users/login
+          method: post
+          cors: true
+      # problems
+      # sessions
