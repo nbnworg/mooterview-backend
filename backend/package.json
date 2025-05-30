@@ -1,0 +1,40 @@
+{
+  "name": "mooterview-backend",
+  "version": "1.0.0",
+  "description": "mooterview backend development using express, serverless and aws",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rimraf dist && tsc",
+    "deploy:sandbox": "npm run build && serverless deploy --stage sandbox",
+    "remove:sandbox": "serverless remove --stage sandbox",
+    "deploy:production": "npm run build && serverless deploy --stage production",
+    "remove:production": "serverless remove --stage production"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@aws-amplify/storage": "^6.8.4",
+    "@aws-sdk/client-dynamodb": "^3.772.0",
+    "@aws-sdk/lib-dynamodb": "^3.772.0",
+    "aws-sdk": "^2.1692.0",
+    "cors": "^2.8.5",
+    "date-fns": "^4.1.0",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "joi": "^17.13.3",
+    "serverless-http": "^3.2.0",
+    "uuid": "^11.1.0"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.147",
+    "@types/aws-sdk": "^0.0.42",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.1",
+    "@types/node": "^22.13.11",
+    "esbuild": "^0.25.1",
+    "rimraf": "^6.0.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.2"
+  }
+}
