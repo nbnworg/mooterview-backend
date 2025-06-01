@@ -13,7 +13,7 @@ export const signupUser = async (
     await putItemToDB(userId, username, email, fullName, location);
     return { message: "User signed up successfully!", userId };
   } catch (error) {
-    console.error("Error creating employee:", error);
+    console.error("Error occurred while sign up:", error);
     throw error;
   }
 };

@@ -1,5 +1,5 @@
 import { cognito } from "../clients/clients";
-import { USER_POOL_ID } from "./constants";
+import { CLIENT_ID, USER_POOL_ID } from "./constants";
 
 export const createCognitoUser = async (
   username: string,
@@ -42,4 +42,17 @@ export const createCognitoUser = async (
     throw new Error("Failed ot retrieve userId from Cognito");
   }
   return userId;
+};
+
+export const loginCognitoUser = async (username: string, password: string) => {
+  const params = {
+    AuthFlow: "USER_PASSWORD_AUTH",
+    ClientId: CLIENT_ID,
+    AuthParameters: {
+      USERNAME: username,
+      PASSWORD: password,
+    },
+  };
+  const response = await cognito.initiateAuth(params).promise();
+  return response;
 };
