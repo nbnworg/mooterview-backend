@@ -1,12 +1,13 @@
-import { CreateProblemInput } from "mooterview-server";
-import { handleValidationErrors } from "../../utils/handleValidationError";
+// import { CreateProblemInput } from "mooterview-server";
+// import { handleValidationErrors } from "../../utils/handleValidationError";
 import { putItemToDB } from "../../utils/commonDynamodbMethods";
 import { v4 as uuidv4 } from "uuid";
 import { PROBLEMS_TABLE } from "../../utils/constants";
+import { CreateProblemInputType } from "../../routes/problems.route";
 
-export const createProblem = async (input: CreateProblemInput) => {
-  const validateInput = CreateProblemInput.validate(input);
-  handleValidationErrors(validateInput);
+export const createProblem = async (input: CreateProblemInputType) => {
+  // const validateInput = CreateProblemInput.validate(input);
+  // handleValidationErrors(validateInput);
 
   const title = input.title!;
   const problemStatement = input.problemStatement!;
