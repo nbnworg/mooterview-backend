@@ -63,4 +63,16 @@ functions:
           method: get
           cors: true
       # problems
+      - http:
+          path: /problems/
+          method: post
+          cors: true
+      - http:
+          path: /problems/
+          method: get
+          cors: true
+      - http:
+          path: /problems/{problemId}
+          method: get
+          cors: true
       # sessions

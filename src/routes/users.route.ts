@@ -26,7 +26,7 @@ router.post("/", async (req, res) => {
     const result: CreateUserOutput = await signupUser(input);
     res.status(200).json(result);
   } catch (error) {
-    res.status(500).send(`Error login as admin: ${error}`);
+    res.status(500).send(`Error while signup: ${error}`);
   }
 });
 
@@ -36,7 +36,7 @@ router.post("/login", async (req, res) => {
     const result = await loginUser(username, password);
     res.status(200).json(result);
   } catch (error) {
-    res.status(500).send(`Error login as admin: ${error}`);
+    res.status(500).send(`Error while login: ${error}`);
   }
 });
 

@@ -1,26 +1,9 @@
 import AWS from "aws-sdk";
 import { db } from "../clients/clients";
-import { USERS_TABLE } from "./constants";
+import { DocumentClient } from "aws-sdk/clients/dynamodb";
 
-export const putItemToDB = async (
-  userId: string,
-  username: string,
-  email: string,
-  fullName: string,
-  location: string
-) => {
-  const userParams = {
-    TableName: USERS_TABLE,
-    Item: {
-      userId,
-      username,
-      email,
-      fullName,
-      location,
-    },
-  };
-
-  await db.put(userParams).promise();
+export const putItemToDB = async (params: DocumentClient.PutItemInput) => {
+  await db.put(params).promise();
 };
 
 export const getItemFromDB = async (
@@ -28,4 +11,11 @@ export const getItemFromDB = async (
 ) => {
   const result = await db.get(params).promise();
   return result.Item;
+};
+
+export const getAllItemsFromDB = async (
+  params: AWS.DynamoDB.DocumentClient.ScanInput
+) => {
+  const result = await db.scan(params).promise();
+  return result.Items;
 };
