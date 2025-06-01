@@ -4,7 +4,6 @@
   "description": "mooterview backend development using express, serverless and aws",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "build": "rimraf dist && tsc",
     "deploy:sandbox": "npm run build && serverless deploy --stage sandbox",
     "remove:sandbox": "serverless remove --stage sandbox",
