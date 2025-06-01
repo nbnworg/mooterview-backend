@@ -1,1 +1,45 @@
-export const createProblem = async () => {};
+import { CreateProblemInput } from "mooterview-server";
+import { handleValidationErrors } from "../../utils/handleValidationError";
+import { putItemToDB } from "../../utils/commonDynamodbMethods";
+import { v4 as uuidv4 } from "uuid";
+import { PROBLEMS_TABLE } from "../../utils/constants";
+
+export const createProblem = async (input: CreateProblemInput) => {
+  const validateInput = CreateProblemInput.validate(input);
+  handleValidationErrors(validateInput);
+
+  const title = input.title!;
+  const problemStatement = input.problemStatement!;
+  const problemDescription = input.problemDescription!;
+  const level = input.level!;
+  const averageSolveTime = input.averageSolveTime!;
+  const totalUsersAttempted = input.totalUsersAttempted!;
+
+  if (
+    !title ||
+    !problemStatement ||
+    !problemDescription ||
+    !level ||
+    !averageSolveTime ||
+    !totalUsersAttempted
+  ) {
+    throw new Error("Invalid Request, Missing Required Fields");
+  }
+
+  const problemId = `problem_${uuidv4}`;
+
+  const params = {
+    TableName: PROBLEMS_TABLE,
+    Item: {
+      problemId: problemId,
+      title,
+      problemStatement,
+      problemDescription,
+      level,
+      averageSolveTime,
+      totalUsersAttempted,
+    },
+  };
+  await putItemToDB(params);
+  return { message: "Problem created successfully!", problemId };
+};

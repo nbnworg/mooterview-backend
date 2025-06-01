@@ -2,6 +2,7 @@ import { CreateUserInput } from "mooterview-server";
 import { createCognitoUser } from "../../utils/commonCognitoMethods";
 import { putItemToDB } from "../../utils/commonDynamodbMethods";
 import { handleValidationErrors } from "../../utils/handleValidationError";
+import { USERS_TABLE } from "../../utils/constants";
 
 export const signupUser = async (userInput: CreateUserInput) => {
   const validateInput = CreateUserInput.validate(userInput);
@@ -18,6 +19,11 @@ export const signupUser = async (userInput: CreateUserInput) => {
   }
 
   const userId = await createCognitoUser(username, email, password);
-  await putItemToDB(userId, username, email, fullName, location);
+
+  const params = {
+    TableName: USERS_TABLE,
+    Item: { userId, username, email, fullName, location },
+  };
+  await putItemToDB(params);
   return { message: "User signed up successfully!", userId };
 };
