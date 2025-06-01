@@ -58,5 +58,9 @@ functions:
           path: /users/login
           method: post
           cors: true
+      - http:
+          path: /users/{userId}
+          method: get
+          cors: true
       # problems
       # sessions

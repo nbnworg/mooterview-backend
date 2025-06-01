@@ -1,3 +1,4 @@
+import AWS from "aws-sdk";
 import { db } from "../clients/clients";
 import { USERS_TABLE } from "./constants";
 
@@ -20,4 +21,11 @@ export const putItemToDB = async (
   };
 
   await db.put(userParams).promise();
+};
+
+export const getItemFromDB = async (
+  params: AWS.DynamoDB.DocumentClient.GetItemInput
+) => {
+  const result = await db.get(params).promise();
+  return result.Item;
 };

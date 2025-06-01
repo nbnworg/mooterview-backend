@@ -1,7 +1,13 @@
 import { Router } from "express";
 import { signupUser } from "../services/users/signupUser";
 import { loginUser } from "../services/users/loginUser";
-import { CreateUserInput, CreateUserOutput } from "mooterview-server";
+import {
+  CreateUserInput,
+  CreateUserOutput,
+  GetUserByIdInput,
+  GetUserByIdOutput,
+} from "mooterview-server";
+import { getUserById } from "../services/users/getUserById";
 
 const router = Router();
 
@@ -32,6 +38,17 @@ router.post("/login", async (req, res) => {
   } catch (error) {
     res.status(500).send(`Error login as admin: ${error}`);
   }
+});
+
+router.get("/:userId", async (req, res) => {
+  try {
+    const input: GetUserByIdInput = {
+      userId: req.params.userId,
+    };
+    const userProfile: GetUserByIdOutput = await getUserById(input);
+
+    res.status(200).json(userProfile);
+  } catch (error) {}
 });
 
 export default router;
