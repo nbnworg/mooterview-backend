@@ -9,10 +9,6 @@ export const getProblemById = async (input: GetProblemByIdInput) => {
 
   const problemId = input.problemId!;
 
-  if (!problemId) {
-    throw new Error("Invalid Request, Missing Required Fields");
-  }
-
   const params = {
     TableName: PROBLEMS_TABLE,
     Key: { problemId: problemId },

@@ -1,8 +1,6 @@
 import { Router } from "express";
 import {
-  CreateProblemInput,
   CreateProblemOutput,
-  GetAllProblemsInput,
   GetAllProblemsOutput,
   GetProblemByIdInput,
   GetProblemByIdOutput,
@@ -13,9 +11,18 @@ import { getProblems } from "../services/problems/getProblems";
 
 const router = Router();
 
+export interface CreateProblemInputType {
+  title: string;
+  problemStatement: string;
+  problemDescription: String;
+  level: String;
+  averageSolveTime: number;
+  totalUsersAttempted: number;
+}
+
 router.post("/", async (req, res) => {
   try {
-    const input: CreateProblemInput = {
+    const input: CreateProblemInputType = {
       title: req.body.title,
       problemStatement: req.body.problemStatement,
       problemDescription: req.body.problemDescription,
@@ -24,7 +31,7 @@ router.post("/", async (req, res) => {
       totalUsersAttempted: req.body.totalUsersAttempted,
     };
     if (!input) {
-      res.status(400).json({ message: "Missing Required Fields" });
+      throw new Error("Invalid Request, Missing Required Fields");
     }
 
     const result: CreateProblemOutput = await createProblem(input);
@@ -50,6 +57,10 @@ router.get("/:problemId", async (req, res) => {
     const input: GetProblemByIdInput = {
       problemId: req.params.problemId,
     };
+
+    if (!input) {
+      throw new Error("Invalid Request, Missing Required Fields");
+    }
 
     const problem: GetProblemByIdOutput = await getProblemById(input);
 

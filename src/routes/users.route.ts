@@ -21,7 +21,7 @@ router.post("/", async (req, res) => {
       location: req.body.location,
     };
     if (!input) {
-      res.status(400).json({ message: "Missing Required Fields" });
+      throw new Error("Invalid Request, Missing Required Fields");
     }
     const result: CreateUserOutput = await signupUser(input);
     res.status(200).json(result);
@@ -45,12 +45,15 @@ router.get("/:userId", async (req, res) => {
     const input: GetUserByIdInput = {
       userId: req.params.userId,
     };
+
+    if (!input) {
+      throw new Error("Invalid Request, Missing required fields");
+    }
+
     const userProfile: GetUserByIdOutput = await getUserById(input);
 
     res.status(200).json(userProfile);
-  } catch (error) {
-    res.status(500).send(`Error while fetching user profile: ${error}`);
-  }
+  } catch (error) {}
 });
 
 export default router;
