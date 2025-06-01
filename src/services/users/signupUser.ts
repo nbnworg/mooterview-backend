@@ -13,10 +13,6 @@ export const signupUser = async (userInput: CreateUserInput) => {
   const fullName = userInput.fullName!;
   const location = userInput.location!;
 
-  if (!username || !email || !password || !fullName || !location) {
-    throw new Error("Invalid Request, Missing Required Fields");
-  }
-
   const userId = await createCognitoUser(username, email, password);
   await putItemToDB(userId, username, email, fullName, location);
   return { message: "User signed up successfully!", userId };

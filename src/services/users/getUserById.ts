@@ -9,10 +9,6 @@ export const getUserById = async (input: GetUserByIdInput) => {
 
   const userId = input.userId!;
 
-  if (!userId) {
-    throw new Error("Invalid Request, Missing Required Fields");
-  }
-
   const params = {
     TableName: USERS_TABLE,
     Key: { userId: userId },
@@ -21,7 +17,7 @@ export const getUserById = async (input: GetUserByIdInput) => {
   const userProfile = await getItemFromDB(params);
 
   if (!userProfile) {
-    throw new Error("EntityNotFoundException: User not found");
+    throw new Error("User not found");
   }
   return userProfile as GetUserByIdOutput;
 };
