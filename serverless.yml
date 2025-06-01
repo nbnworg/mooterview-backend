@@ -51,6 +51,10 @@ functions:
     events:
       # users
       - http:
+          path: /users/
+          method: post
+          cors: true
+      - http:
           path: /users/login
           method: post
           cors: true
