@@ -1,6 +1,15 @@
 import { Router } from "express";
-import { CreateProblemInput, CreateProblemOutput } from "mooterview-server";
+import {
+  CreateProblemInput,
+  CreateProblemOutput,
+  GetAllProblemsInput,
+  GetAllProblemsOutput,
+  GetProblemByIdInput,
+  GetProblemByIdOutput,
+} from "mooterview-server";
 import { createProblem } from "../services/problems/createProblem";
+import { getProblemById } from "../services/problems/getProblemById";
+import { getProblems } from "../services/problems/getProblems";
 
 const router = Router();
 
@@ -25,8 +34,29 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.get("/", async (req, res) => {});
+router.get("/", async (req, res) => {
+  try {
+    const problems: GetAllProblemsOutput = await getProblems();
+    res.status(200).json(problems);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: `Error while fetching problems: ${error}` });
+  }
+});
 
-router.get("/:problemId", async (req, res) => {});
+router.get("/:problemId", async (req, res) => {
+  try {
+    const input: GetProblemByIdInput = {
+      problemId: req.params.problemId,
+    };
+
+    const problem: GetProblemByIdOutput = await getProblemById(input);
+
+    res.status(200).json(problem);
+  } catch (error) {
+    res.status(500).send(`Error while fetching problem: ${error}`);
+  }
+});
 
 export default router;

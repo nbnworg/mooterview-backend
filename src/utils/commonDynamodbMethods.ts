@@ -12,3 +12,10 @@ export const getItemFromDB = async (
   const result = await db.get(params).promise();
   return result.Item;
 };
+
+export const getAllItemsFromDB = async (
+  params: AWS.DynamoDB.DocumentClient.ScanInput
+) => {
+  const result = await db.scan(params).promise();
+  return result.Items;
+};
