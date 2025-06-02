@@ -28,6 +28,11 @@ provider:
         - cognito-idp:AdminInitiateAuth
         - cognito-idp:AdminSetUserPassword
       Resource: arn:aws:cognito-idp:us-east-1:${self:custom.accountIds.${opt:stage, 'sandbox'}}:userpool/${self:custom.userpools.poolid.${opt:stage, 'sandbox'}}
+
+    - Effect: Allow
+      Action:
+        - secretsmanager:GetSecretValue
+      Resource: arn:aws:secretsmanager:us-east-1:${self:custom.accountIds.${opt:stage, 'sandbox'}}:secret:${self:custom.secretName.${opt:stage, 'sandbox'}}-*
 custom:
   accountIds:
     production: "747136956388"
@@ -40,6 +45,8 @@ custom:
       sandbox: us-east-1_YdyOikAeJ
     clientid:
       sandbox: 3kv5sves5oegd1qu06632j24mi
+  secretName:
+    sandbox: gpt
   functionNames:
     production: Mooterview-Backend
     sandbox: Mooterview-Backend
@@ -99,4 +106,9 @@ functions:
       - http:
           path: /users/{userId}/problems/{problemId}/sessions
           method: get
+          cors: true
+      #prompt
+      - http:
+          path: /prompt/response
+          method: post
           cors: true

@@ -4,3 +4,4 @@ export const CLIENT_ID = process.env.CLIENT_ID!;
 export const USERS_TABLE = "mtv-users-table";
 export const PROBLEMS_TABLE = "mtv-problems-table";
 export const SESSIONS_TABLE = "mtv-sessions-table";
+export const SECRET_NAME = "gpt";
