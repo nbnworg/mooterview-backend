@@ -19,9 +19,12 @@ export const updateSessionById = async (input: UpdateSessionByIdInput) => {
   const expressionAttributeValues: Record<string, any> = {};
 
   if (chatsQueue !== undefined) {
-    updateExpression.push("#cq = :cq");
+    updateExpression.push(
+      "#cq = list_append(if_not_exists(#cq, :emptyList), :newChats)"
+    );
     expressionAttributeNames["#cq"] = "chatsQueue";
-    expressionAttributeValues[":cq"] = chatsQueue;
+    expressionAttributeValues[":emptyList"] = [];
+    expressionAttributeValues[":newChats"] = chatsQueue;
   }
 
   if (endTime !== undefined) {
@@ -37,9 +40,12 @@ export const updateSessionById = async (input: UpdateSessionByIdInput) => {
   }
 
   if (notes !== undefined) {
-    updateExpression.push("#nt = :nt");
+    updateExpression.push(
+      "#nt = list_append(if_not_exists(#nt, :emptyList), :newNotes)"
+    );
     expressionAttributeNames["#nt"] = "notes";
-    expressionAttributeValues[":nt"] = notes;
+    expressionAttributeValues[":emptyList"] = [];
+    expressionAttributeValues[":newNotes"] = notes;
   }
 
   if (updateExpression.length === 0) {

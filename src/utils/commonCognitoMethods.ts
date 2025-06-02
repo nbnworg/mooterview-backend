@@ -44,12 +44,12 @@ export const createCognitoUser = async (
   return userId;
 };
 
-export const loginCognitoUser = async (username: string, password: string) => {
+export const loginCognitoUser = async (email: string, password: string) => {
   const params = {
     AuthFlow: "USER_PASSWORD_AUTH",
     ClientId: CLIENT_ID,
     AuthParameters: {
-      USERNAME: username,
+      USERNAME: email,
       PASSWORD: password,
     },
   };

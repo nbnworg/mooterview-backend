@@ -24,7 +24,7 @@ export const createSession = async (input: CreateSessionInputType) => {
     throw new Error("Invalid Request, Missing Required Fields");
   }
 
-  const sessionId = `session_${uuidv4}`;
+  const sessionId = `session_${uuidv4()}`;
 
   const params = {
     TableName: SESSIONS_TABLE,

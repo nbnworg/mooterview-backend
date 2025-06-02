@@ -23,7 +23,7 @@ router.post("/", async (req, res) => {
       username: req.body.username,
       email: req.body.email,
       password: req.body.password,
-      fullName: req.body.fullname,
+      fullName: req.body.fullName,
       location: req.body.location,
     };
     if (!input) {
@@ -38,8 +38,8 @@ router.post("/", async (req, res) => {
 
 router.post("/login", async (req, res) => {
   try {
-    const { username, password } = req.body;
-    const result = await loginUser(username, password);
+    const { email, password } = req.body;
+    const result = await loginUser(email, password);
     res.status(200).json(result);
   } catch (error) {
     res.status(500).send(`Error while login: ${error}`);
