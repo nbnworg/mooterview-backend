@@ -19,3 +19,15 @@ export const getAllItemsFromDB = async (
   const result = await db.scan(params).promise();
   return result.Items;
 };
+
+export const updateItemInDB = async (
+  params: AWS.DynamoDB.DocumentClient.UpdateItemInput
+) => {
+  await db.update(params).promise();
+};
+
+export const deleteItemFromDB = async (
+  params: AWS.DynamoDB.DocumentClient.DeleteItemInput
+) => {
+  await db.delete(params).promise();
+};

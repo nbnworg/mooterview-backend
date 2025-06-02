@@ -76,3 +76,27 @@ functions:
           method: get
           cors: true
       # sessions
+      - http:
+          path: /sessions/
+          method: post
+          cors: true
+      - http:
+          path: /sessions/{sessionId}
+          method: get
+          cors: true
+      - http:
+          path: /sessions/{sessionId}
+          method: patch
+          cors: true
+      - http:
+          path: /sessions/{sessionId}
+          method: delete
+          cors: true
+      - http:
+          path: /users/{userId}/sessions
+          method: get
+          cors: true
+      - http:
+          path: /users/{userId}/problems/{problemId}/sessions
+          method: get
+          cors: true

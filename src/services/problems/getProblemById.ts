@@ -17,7 +17,7 @@ export const getProblemById = async (input: GetProblemByIdInput) => {
   const problem = await getItemFromDB(params);
 
   if (!problem) {
-    throw new Error("EntityNotFoundException: Problem not found");
+    throw new Error("Problem not found");
   }
 
   return problem as GetProblemByIdOutput;
