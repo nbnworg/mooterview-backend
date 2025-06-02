@@ -69,6 +69,14 @@ functions:
           path: /users/{userId}
           method: get
           cors: true
+      - http:
+          path: /users/{userId}/sessions
+          method: get
+          cors: true
+      - http:
+          path: /users/{userId}/problems/{problemId}/sessions
+          method: get
+          cors: true
       # problems
       - http:
           path: /problems/
@@ -98,14 +106,6 @@ functions:
       - http:
           path: /sessions/{sessionId}
           method: delete
-          cors: true
-      - http:
-          path: /users/{userId}/sessions
-          method: get
-          cors: true
-      - http:
-          path: /users/{userId}/problems/{problemId}/sessions
-          method: get
           cors: true
       #prompt
       - http:

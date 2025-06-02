@@ -1,6 +1,7 @@
 import AWS from "aws-sdk";
 import { db } from "../clients/clients";
 import { DocumentClient } from "aws-sdk/clients/dynamodb";
+import { SessionSummary } from "mooterview-server";
 
 export const putItemToDB = async (params: DocumentClient.PutItemInput) => {
   await db.put(params).promise();
@@ -30,4 +31,13 @@ export const deleteItemFromDB = async (
   params: AWS.DynamoDB.DocumentClient.DeleteItemInput
 ) => {
   await db.delete(params).promise();
+};
+
+export const queryItemFromDB = async (
+  params: AWS.DynamoDB.DocumentClient.QueryInput
+): Promise<{ sessions: SessionSummary[] }> => {
+  const result = await db.query(params).promise();
+  return {
+    sessions: (result.Items as SessionSummary[]) || [],
+  };
 };
