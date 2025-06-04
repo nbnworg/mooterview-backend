@@ -8,6 +8,7 @@ import {
   GetUserByIdOutput,
 } from "mooterview-server";
 import { getUserById } from "../services/users/getUserById";
+import { handleValidationErrors } from "../utils/handleValidationError";
 
 const router = Router();
 
@@ -20,9 +21,9 @@ router.post("/", async (req, res) => {
       fullName: req.body.fullname,
       location: req.body.location,
     };
-    if (!input) {
-      throw new Error("Invalid Request, Missing Required Fields");
-    }
+
+    const validationOutput = CreateUserInput.validate(input);
+    handleValidationErrors(validationOutput);
     const result: CreateUserOutput = await signupUser(input);
     res.status(200).json(result);
   } catch (error) {
@@ -33,6 +34,11 @@ router.post("/", async (req, res) => {
 router.post("/login", async (req, res) => {
   try {
     const { username, password } = req.body;
+    if (!username || !password) {
+      return res
+        .status(400)
+        .json({ message: "Missing required fields: username or password" });
+    }
     const result = await loginUser(username, password);
     res.status(200).json(result);
   } catch (error) {
@@ -46,9 +52,8 @@ router.get("/:userId", async (req, res) => {
       userId: req.params.userId,
     };
 
-    if (!input) {
-      throw new Error("Invalid Request, Missing required fields");
-    }
+    const validationOutput = GetUserByIdInput.validate(input);
+    handleValidationErrors(validationOutput);
 
     const userProfile: GetUserByIdOutput = await getUserById(input);
 
