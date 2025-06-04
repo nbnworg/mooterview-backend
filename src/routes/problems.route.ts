@@ -14,8 +14,8 @@ const router = Router();
 export interface CreateProblemInputType {
   title: string;
   problemStatement: string;
-  problemDescription: String;
-  level: String;
+  problemDescription: string;
+  level: string;
   averageSolveTime: number;
   totalUsersAttempted: number;
 }
