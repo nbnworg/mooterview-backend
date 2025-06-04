@@ -8,6 +8,7 @@ provider:
   environment:
     USER_POOL_ID: ${self:custom.userpools.poolid.${opt:stage, 'sandbox'}}
     CLIENT_ID: ${self:custom.userpools.clientid.${opt:stage, 'sandbox'}}
+    SECRET_NAME: ${self:custom.secretName.${opt:stage, 'sandbox'}}
   iamRoleStatements:
     - Effect: Allow
       Action:
