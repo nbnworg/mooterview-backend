@@ -2,7 +2,9 @@ import { secretsManager } from "../../clients/clients";
 import { SECRET_NAME } from "../../utils/constants";
 
 export async function fetchGptKey(): Promise<string> {
-    console.log("inside fetchGptKey");
+    if (process.env.NODE_ENV === "development") {
+        console.log("inside fetchGptKey");
+    }
 
     try {
         const secret = await secretsManager
@@ -13,8 +15,9 @@ export async function fetchGptKey(): Promise<string> {
             throw new Error("GPT secret string not found");
         }
 
-        console.log("secret: ", secret)
-        console.log("typeof secret: ", typeof secret)
+        if (process.env.NODE_ENV === "development") {
+            console.log("Fetched secret from Secrets Manager");
+        }
         
         const parsed = JSON.parse(secret.SecretString);
         
@@ -23,7 +26,9 @@ export async function fetchGptKey(): Promise<string> {
         if (!apiKey) {
             throw new Error("chatgpt key not found in secret");
         }
-        console.log("apiKey: ", apiKey)
+        if (process.env.NODE_ENV === "development") {
+            console.log("Retrieved GPT API key");
+        }
 
         return apiKey;
     } catch (error) {
