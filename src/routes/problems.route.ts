@@ -8,6 +8,7 @@ import {
 import { createProblem } from "../services/problems/createProblem";
 import { getProblemById } from "../services/problems/getProblemById";
 import { getProblems } from "../services/problems/getProblems";
+import { handleValidationErrors } from "../utils/handleValidationError";
 
 const router = Router();
 
@@ -30,8 +31,17 @@ router.post("/", async (req, res) => {
       averageSolveTime: req.body.averageSolveTime,
       totalUsersAttempted: req.body.totalUsersAttempted,
     };
-    if (!input) {
-      throw new Error("Invalid Request, Missing Required Fields");
+    if (
+      typeof input.title !== "string" ||
+      typeof input.problemStatement !== "string" ||
+      typeof input.problemDescription !== "string" ||
+      typeof input.level !== "string" ||
+      typeof input.averageSolveTime !== "number" ||
+      typeof input.totalUsersAttempted !== "number"
+    ) {
+      return res
+        .status(400)
+        .json({ message: "Invalid Request, Missing Required Fields" });
     }
 
     const result: CreateProblemOutput = await createProblem(input);
@@ -58,9 +68,8 @@ router.get("/:problemId", async (req, res) => {
       problemId: req.params.problemId,
     };
 
-    if (!input) {
-      throw new Error("Invalid Request, Missing Required Fields");
-    }
+    const validationOutput = GetProblemByIdInput.validate(input);
+    handleValidationErrors(validationOutput);
 
     const problem: GetProblemByIdOutput = await getProblemById(input);
 
