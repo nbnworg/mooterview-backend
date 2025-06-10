@@ -14,7 +14,7 @@ export const signupUser = async (userInput: CreateUserInput) => {
   const fullName = userInput.fullName!;
   const location = userInput.location!;
 
-  const userId = await createCognitoUser(username, email, password);
+  const userId = await createCognitoUser(email, email, password);
 
   const params = {
     TableName: USERS_TABLE,

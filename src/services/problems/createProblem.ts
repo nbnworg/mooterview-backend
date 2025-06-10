@@ -27,7 +27,7 @@ export const createProblem = async (input: CreateProblemInputType) => {
     throw new Error("Invalid Request, Missing Required Fields");
   }
 
-  const problemId = `problem_${uuidv4}`;
+  const problemId = `problem_${uuidv4()}`;
 
   const params = {
     TableName: PROBLEMS_TABLE,
