@@ -18,11 +18,13 @@ const router = Router();
 export interface CreateSessionInputType {
   userId: string;
   problemId: string;
-  chatsQueue: [{ actor: string; message: string }];
+  // chatsQueue: [{ actor: string; message: string }];
+  chatsQueue: [];
   startTime: string;
   endTime: string;
   problemStatus: string;
-  notes: [{ content: string; timestamp: string }];
+  // notes: [{ content: string; timestamp: string }];
+  notes: [];
 }
 
 router.post("/", async (req, res) => {

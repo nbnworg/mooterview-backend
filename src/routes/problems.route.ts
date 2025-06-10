@@ -39,7 +39,7 @@ router.post("/", async (req, res) => {
       typeof input.averageSolveTime !== "number" ||
       typeof input.totalUsersAttempted !== "number"
     ) {
-      return res
+      res
         .status(400)
         .json({ message: "Invalid Request, Missing Required Fields" });
     }
