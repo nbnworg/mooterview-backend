@@ -51,6 +51,7 @@ custom:
   functionNames:
     production: Mooterview-Backend
     sandbox: Mooterview-Backend
+  cognitoAuthorizerArn: arn:aws:cognito-idp:${self:provider.region}:${self:custom.accountIds.${opt:stage, 'sandbox'}}:userpool/${self:custom.userpools.poolid.${opt:stage, 'sandbox'}}
 
 functions:
   app:
@@ -70,46 +71,57 @@ functions:
           path: /users/{userId}
           method: get
           cors: true
+          authorizer: ${self:custom.cognitoAuthorizerArn}
       - http:
           path: /users/{userId}/sessions
           method: get
           cors: true
+          authorizer: ${self:custom.cognitoAuthorizerArn}
       - http:
           path: /users/{userId}/problems/{problemId}/sessions
           method: get
           cors: true
+          authorizer: ${self:custom.cognitoAuthorizerArn}
       # problems
       - http:
           path: /problems/
           method: post
           cors: true
+          authorizer: ${self:custom.cognitoAuthorizerArn}
       - http:
           path: /problems/
           method: get
           cors: true
+          authorizer: ${self:custom.cognitoAuthorizerArn}
       - http:
           path: /problems/{problemId}
           method: get
           cors: true
+          authorizer: ${self:custom.cognitoAuthorizerArn}
       # sessions
       - http:
           path: /sessions/
           method: post
           cors: true
+          authorizer: ${self:custom.cognitoAuthorizerArn}
       - http:
           path: /sessions/{sessionId}
           method: get
           cors: true
+          authorizer: ${self:custom.cognitoAuthorizerArn}
       - http:
           path: /sessions/{sessionId}
           method: patch
           cors: true
+          authorizer: ${self:custom.cognitoAuthorizerArn}
       - http:
           path: /sessions/{sessionId}
           method: delete
           cors: true
+          authorizer: ${self:custom.cognitoAuthorizerArn}
       #prompt
       - http:
           path: /prompt/response
           method: post
           cors: true
+          authorizer: ${self:custom.cognitoAuthorizerArn}

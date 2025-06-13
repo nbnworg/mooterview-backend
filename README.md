@@ -32,5 +32,5 @@ tsconfig.json        TypeScript configuration
 - `src/services/sessions` – placeholder for future session logic.
 
 ### Deployment
-The project is deployed to AWS using the Serverless framework. `serverless.yml` defines the AWS runtime, IAM permissions, environment variables, and HTTP events that map to the Lambda `handler` in `dist/app.js` after compilation.
+The project is deployed to AWS using the Serverless framework. `serverless.yml` defines the AWS runtime, IAM permissions, environment variables, and HTTP events that map to the Lambda `handler` in `dist/app.js` after compilation. All API routes are secured with an AWS Cognito authorizer so requests must include a valid access token in the `Authorization` header.
 

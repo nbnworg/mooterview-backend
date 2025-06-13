@@ -1,9 +1,10 @@
 import { Router } from "express";
 import { getGptResponse } from "../services/gpt/getGptResponse";
+import { authorize } from "../middleware/authorize";
 
 const router = Router();
 
-router.post("/response", async (req, res) => {
+router.post("/response", authorize, async (req, res) => {
   try {
     const { prompt, actor, context } = req.body;
 

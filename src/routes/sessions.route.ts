@@ -12,6 +12,7 @@ import { createSession } from "../services/sessions/createSession";
 import { getSessionById } from "../services/sessions/getSessionById";
 import { updateSessionById } from "../services/sessions/updateSessionById";
 import { deleteSessionById } from "../services/sessions/deleteSessionById";
+import { authorize } from "../middleware/authorize";
 
 const router = Router();
 
@@ -25,7 +26,7 @@ export interface CreateSessionInputType {
   notes: [{ content: string; timestamp: string }];
 }
 
-router.post("/", async (req, res) => {
+router.post("/", authorize, async (req, res) => {
   try {
     const input: CreateSessionInputType = {
       userId: req.body.userId,
@@ -48,7 +49,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.get("/:sessionId", async (req, res) => {
+router.get("/:sessionId", authorize, async (req, res) => {
   try {
     const input: GetSessionByIdInput = {
       sessionId: req.params.sessionId,
@@ -65,7 +66,7 @@ router.get("/:sessionId", async (req, res) => {
   }
 });
 
-router.patch("/:sessionId", async (req, res) => {
+router.patch("/:sessionId", authorize, async (req, res) => {
   try {
     const input: UpdateSessionByIdInput = {
       sessionId: req.params.sessionId,
@@ -86,7 +87,7 @@ router.patch("/:sessionId", async (req, res) => {
   }
 });
 
-router.delete("/:sessionId", async (req, res) => {
+router.delete("/:sessionId", authorize, async (req, res) => {
   try {
     const input: DeleteSessionByIdInput = {
       sessionId: req.params.sessionId,

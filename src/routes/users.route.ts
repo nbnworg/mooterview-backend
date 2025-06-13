@@ -15,6 +15,7 @@ import { getUserById } from "../services/users/getUserById";
 import { handleValidationErrors } from "../utils/handleValidationError";
 import { getSessionForUser } from "../services/users/getSessionForUser";
 import { getSessionsForProblemsByUser } from "../services/users/getSessionsForProblemsByUser";
+import { authorize } from "../middleware/authorize";
 
 const router = Router();
 
@@ -39,14 +40,12 @@ router.post("/", async (req, res) => {
 
 router.post("/login", async (req, res) => {
   try {
-    const { username, password } = req.body;
-    if (!username || !password) {
+    const { email, password } = req.body;
+    if (!email || !password) {
       return res
         .status(400)
-        .json({ message: "Missing required fields: username or password" });
+        .json({ message: "Missing required fields: email or password" });
     }
-    const result = await loginUser(username, password);
-    const { email, password } = req.body;
     const result = await loginUser(email, password);
     res.status(200).json(result);
   } catch (error) {
@@ -54,7 +53,7 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.get("/:userId", async (req, res) => {
+router.get("/:userId", authorize, async (req, res) => {
   try {
     const input: GetUserByIdInput = {
       userId: req.params.userId,
@@ -71,7 +70,7 @@ router.get("/:userId", async (req, res) => {
   }
 });
 
-router.get("/:userId/sessions", async (req, res) => {
+router.get("/:userId/sessions", authorize, async (req, res) => {
   try {
     const input: GetSessionsForUserInput = {
       userId: req.params.userId,
@@ -88,7 +87,7 @@ router.get("/:userId/sessions", async (req, res) => {
   }
 });
 
-router.get("/:userId/problems/:problemId/sessions", async (req, res) => {
+router.get("/:userId/problems/:problemId/sessions", authorize, async (req, res) => {
   try {
     const input: GetSessionsForProblemsByUserInput = {
       userId: req.params.userId,

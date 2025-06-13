@@ -9,6 +9,7 @@ import { createProblem } from "../services/problems/createProblem";
 import { getProblemById } from "../services/problems/getProblemById";
 import { getProblems } from "../services/problems/getProblems";
 import { handleValidationErrors } from "../utils/handleValidationError";
+import { authorize } from "../middleware/authorize";
 
 const router = Router();
 
@@ -21,7 +22,7 @@ export interface CreateProblemInputType {
   totalUsersAttempted: number;
 }
 
-router.post("/", async (req, res) => {
+router.post("/", authorize, async (req, res) => {
   try {
     const input: CreateProblemInputType = {
       title: req.body.title,
@@ -51,7 +52,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.get("/", async (req, res) => {
+router.get("/", authorize, async (req, res) => {
   try {
     const problems: GetAllProblemsOutput = await getProblems();
     res.status(200).json(problems);
@@ -62,7 +63,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/:problemId", async (req, res) => {
+router.get("/:problemId", authorize, async (req, res) => {
   try {
     const input: GetProblemByIdInput = {
       problemId: req.params.problemId,
