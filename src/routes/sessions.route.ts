@@ -29,10 +29,9 @@ export interface CreateSessionInputType {
 
 router.post("/", async (req, res) => {
   try {
-
     console.log("req.body: ", req.body);
 
-    console.log("here 1")
+    console.log("here 1");
 
     const input: CreateSessionInputType = {
       userId: req.body.userId,
@@ -44,16 +43,16 @@ router.post("/", async (req, res) => {
       notes: req.body.notes,
     };
 
-    console.log("here 2")
+    console.log("here 2");
 
-    if (!input) {
+    if (!input.userId || !input.problemId) {
       throw new Error("Invalid Request, Missing Required Fields");
     }
 
-    console.log("here 3")
+    console.log("here 3");
     const result: CreateSessionOutput = await createSession(input);
     console.log("result session: ", result);
-    console.log("here 4")
+    console.log("here 4");
     res.status(200).json(result);
   } catch (error) {
     res.status(500).send(`Error while creating session: ${error}`);
