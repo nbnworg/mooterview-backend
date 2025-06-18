@@ -26,14 +26,9 @@ export interface CreateSessionInputType {
   // notes: [{ content: string; timestamp: string }];
   notes: [];
 }
-
+// @ts-ignore
 router.post("/", async (req, res) => {
   try {
-
-    console.log("req.body: ", req.body);
-
-    console.log("here 1")
-
     const input: CreateSessionInputType = {
       userId: req.body.userId,
       problemId: req.body.problemId,
@@ -44,16 +39,27 @@ router.post("/", async (req, res) => {
       notes: req.body.notes,
     };
 
-    console.log("here 2")
+    const requiredFields: (keyof CreateSessionInputType)[] = [
+      "userId",
+      "problemId",
+      "chatsQueue",
+      "startTime",
+      "endTime",
+      "problemStatus",
+      "notes",
+    ];
 
-    if (!input) {
-      throw new Error("Invalid Request, Missing Required Fields");
+    const missingFields = requiredFields.filter(
+      (field) => input[field] === undefined || input[field] === null
+    );
+
+    if (missingFields.length > 0) {
+      return res.status(400).json({
+        message: `Missing required fields: ${missingFields.join(", ")}`,
+      });
     }
 
-    console.log("here 3")
     const result: CreateSessionOutput = await createSession(input);
-    console.log("result session: ", result);
-    console.log("here 4")
     res.status(200).json(result);
   } catch (error) {
     res.status(500).send(`Error while creating session: ${error}`);

@@ -2,6 +2,8 @@
 
 Mooterview is an AI powered coding assistance platform that helps you prepare for coding interviews.
 
+See `docs/DEVELOPER_GUIDE.md` for setup and development instructions.
+
 ## Project Structure
 
 ```
