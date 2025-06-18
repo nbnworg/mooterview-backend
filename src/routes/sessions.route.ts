@@ -37,8 +37,26 @@ router.post("/", async (req, res) => {
       notes: req.body.notes,
     };
 
-    if (!input) {
-      throw new Error("Invalid Request, Missing Required Fields");
+    const requiredFields: (keyof CreateSessionInputType)[] = [
+      "userId",
+      "problemId",
+      "chatsQueue",
+      "startTime",
+      "endTime",
+      "problemStatus",
+      "notes",
+    ];
+
+    const missingFields = requiredFields.filter(
+      (field) => input[field] === undefined || input[field] === null
+    );
+
+    if (missingFields.length > 0) {
+      return res
+        .status(400)
+        .json({
+          message: `Missing required fields: ${missingFields.join(", ")}`,
+        });
     }
 
     const result: CreateSessionOutput = await createSession(input);
