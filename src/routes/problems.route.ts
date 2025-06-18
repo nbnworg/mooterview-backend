@@ -17,8 +17,8 @@ export interface CreateProblemInputType {
   problemStatement: string;
   problemDescription: string;
   level: string;
-  averageSolveTime: number;
-  totalUsersAttempted: number;
+  averageSolveTime: string | number;
+  totalUsersAttempted: string | number;
 }
 
 router.post("/", async (req, res) => {
@@ -31,18 +31,6 @@ router.post("/", async (req, res) => {
       averageSolveTime: req.body.averageSolveTime,
       totalUsersAttempted: req.body.totalUsersAttempted,
     };
-    if (
-      typeof input.title !== "string" ||
-      typeof input.problemStatement !== "string" ||
-      typeof input.problemDescription !== "string" ||
-      typeof input.level !== "string" ||
-      typeof input.averageSolveTime !== "number" ||
-      typeof input.totalUsersAttempted !== "number"
-    ) {
-      res
-        .status(400)
-        .json({ message: "Invalid Request, Missing Required Fields" });
-    }
 
     const result: CreateProblemOutput = await createProblem(input);
     res.status(200).json(result);

@@ -21,7 +21,7 @@ export interface CreateSessionInputType {
   // chatsQueue: [{ actor: string; message: string }];
   chatsQueue: [];
   startTime: string;
-  endTime: string;
+  endTime: string | undefined;
   problemStatus: string;
   // notes: [{ content: string; timestamp: string }];
   notes: [];
@@ -32,11 +32,11 @@ router.post("/", async (req, res) => {
     const input: CreateSessionInputType = {
       userId: req.body.userId,
       problemId: req.body.problemId,
-      chatsQueue: req.body.chatsQueue,
+      chatsQueue: req.body.chatsQueue || [],
       startTime: req.body.startTime,
-      endTime: req.body.endTime,
+      endTime: req.body.endTime || "",
       problemStatus: req.body.problemStatus,
-      notes: req.body.notes,
+      notes: req.body.notes || [],
     };
 
     const requiredFields: (keyof CreateSessionInputType)[] = [

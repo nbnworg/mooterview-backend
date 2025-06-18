@@ -16,17 +16,6 @@ export const createProblem = async (input: CreateProblemInputType) => {
   const averageSolveTime = input.averageSolveTime!;
   const totalUsersAttempted = input.totalUsersAttempted!;
 
-  if (
-    !title ||
-    !problemStatement ||
-    !problemDescription ||
-    !level ||
-    !averageSolveTime ||
-    !totalUsersAttempted
-  ) {
-    throw new Error("Invalid Request, Missing Required Fields");
-  }
-
   const problemId = `problem_${uuidv4()}`;
 
   const params = {
