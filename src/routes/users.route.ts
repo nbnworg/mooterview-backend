@@ -15,7 +15,7 @@ import { getUserById } from "../services/users/getUserById";
 import { handleValidationErrors } from "../utils/handleValidationError";
 import { getSessionForUser } from "../services/users/getSessionForUser";
 import { getSessionsForProblemsByUser } from "../services/users/getSessionsForProblemsByUser";
-import { verifyCognitoToken } from "../middleware/verifyCognitoToken";
+import { authorizer } from "../middleware/authorizer";
 
 const router = Router();
 
@@ -53,7 +53,7 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.get("/:userId", verifyCognitoToken, async (req, res) => {
+router.get("/:userId", authorizer, async (req, res) => {
   try {
     const input: GetUserByIdInput = {
       userId: req.params.userId,
@@ -70,7 +70,7 @@ router.get("/:userId", verifyCognitoToken, async (req, res) => {
   }
 });
 
-router.get("/:userId/sessions", verifyCognitoToken, async (req, res) => {
+router.get("/:userId/sessions", authorizer, async (req, res) => {
   try {
     const input: GetSessionsForUserInput = {
       userId: req.params.userId,
@@ -89,7 +89,7 @@ router.get("/:userId/sessions", verifyCognitoToken, async (req, res) => {
 
 router.get(
   "/:userId/problems/:problemId/sessions",
-  verifyCognitoToken,
+  authorizer,
   async (req, res) => {
     try {
       const input: GetSessionsForProblemsByUserInput = {

@@ -9,16 +9,16 @@ const client = jwksClient({ jwksUri });
 
 function getKey(header: any, callback: any) {
   client.getSigningKey(header.kid, function (err, key) {
+    if (err) {
+      callback(err);
+      return;
+    }
     const signingKey = key?.getPublicKey();
     callback(null, signingKey);
   });
 }
 
-export const verifyCognitoToken = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const authorizer = (req: Request, res: Response, next: NextFunction) => {
   const token = req.headers.authorization?.split(" ")[1];
 
   if (!token) {
