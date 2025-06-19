@@ -39,14 +39,12 @@ router.post("/", async (req, res) => {
 
 router.post("/login", async (req, res) => {
   try {
-    const { username, password } = req.body;
-    if (!username || !password) {
-      return res
+    const { email, password } = req.body;
+    if (!email || !password) {
+      res
         .status(400)
         .json({ message: "Missing required fields: username or password" });
     }
-    const result = await loginUser(username, password);
-    const { email, password } = req.body;
     const result = await loginUser(email, password);
     res.status(200).json(result);
   } catch (error) {

@@ -44,10 +44,13 @@ custom:
   userpools:
     poolid:
       sandbox: us-east-1_YdyOikAeJ
+      production: us-east-1_ZQGnzljqh
     clientid:
       sandbox: 3kv5sves5oegd1qu06632j24mi
+      production: 1g2qrjl4c3r1a6ciin2b5rlcol
   secretName:
     sandbox: gpt
+    production: gpt
   functionNames:
     production: Mooterview-Backend
     sandbox: Mooterview-Backend
@@ -93,7 +96,7 @@ functions:
           cors: true
       # sessions
       - http:
-          path: /sessions/
+          path: /sessions
           method: post
           cors: true
       - http:
