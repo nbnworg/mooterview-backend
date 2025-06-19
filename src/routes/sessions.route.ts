@@ -18,23 +18,25 @@ const router = Router();
 export interface CreateSessionInputType {
   userId: string;
   problemId: string;
-  chatsQueue: [{ actor: string; message: string }];
+  // chatsQueue: [{ actor: string; message: string }];
+  chatsQueue: [];
   startTime: string;
-  endTime: string;
+  endTime: string | undefined;
   problemStatus: string;
-  notes: [{ content: string; timestamp: string }];
+  // notes: [{ content: string; timestamp: string }];
+  notes: [];
 }
-
+// @ts-ignore
 router.post("/", async (req, res) => {
   try {
     const input: CreateSessionInputType = {
       userId: req.body.userId,
       problemId: req.body.problemId,
-      chatsQueue: req.body.chatsQueue,
+      chatsQueue: req.body.chatsQueue || [],
       startTime: req.body.startTime,
-      endTime: req.body.endTime,
+      endTime: req.body.endTime || "",
       problemStatus: req.body.problemStatus,
-      notes: req.body.notes,
+      notes: req.body.notes || [],
     };
 
     const requiredFields: (keyof CreateSessionInputType)[] = [
@@ -52,11 +54,9 @@ router.post("/", async (req, res) => {
     );
 
     if (missingFields.length > 0) {
-      return res
-        .status(400)
-        .json({
-          message: `Missing required fields: ${missingFields.join(", ")}`,
-        });
+      return res.status(400).json({
+        message: `Missing required fields: ${missingFields.join(", ")}`,
+      });
     }
 
     const result: CreateSessionOutput = await createSession(input);
