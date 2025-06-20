@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 import { SESSIONS_TABLE } from "../../utils/constants";
 import { putItemToDB } from "../../utils/commonDynamodbMethods";
+import { ProblemStatus } from "mooterview-server";
 
 export const createSession = async (input: any) => {
   const userId = input.userId!;
@@ -13,6 +14,7 @@ export const createSession = async (input: any) => {
 
   const sessionId = `session_${uuidv4()}`;
 
+  console.log("sessionId: ", sessionId);
   const params = {
     TableName: SESSIONS_TABLE,
     Item: {
