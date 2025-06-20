@@ -1,5 +1,8 @@
 import { CreateUserInput } from "mooterview-server";
-import { createCognitoUser } from "../../utils/commonCognitoMethods";
+import {
+  createCognitoUser,
+  loginCognitoUser,
+} from "../../utils/commonCognitoMethods";
 import { putItemToDB } from "../../utils/commonDynamodbMethods";
 import { handleValidationErrors } from "../../utils/handleValidationError";
 import { USERS_TABLE } from "../../utils/constants";
@@ -21,5 +24,8 @@ export const signupUser = async (userInput: CreateUserInput) => {
     Item: { userId, username, email, fullName, location },
   };
   await putItemToDB(params);
-  return { message: "User signed up successfully!", userId };
+
+  const loginResponse = await loginCognitoUser(email, password);
+
+  return { message: "User signed up successfully!", userId, loginResponse };
 };
