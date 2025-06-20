@@ -18,17 +18,19 @@ const router = Router();
 export interface CreateSessionInputType {
   userId: string;
   problemId: string;
-  // chatsQueue: [{ actor: string; message: string }];
   chatsQueue: [];
   startTime: string;
   endTime: string | undefined;
   problemStatus: string;
-  // notes: [{ content: string; timestamp: string }];
   notes: [];
 }
 // @ts-ignore
 router.post("/", async (req, res) => {
   try {
+    console.log("req.body: ", req.body);
+
+    console.log("here 1");
+
     const input: CreateSessionInputType = {
       userId: req.body.userId,
       problemId: req.body.problemId,
@@ -59,7 +61,10 @@ router.post("/", async (req, res) => {
       });
     }
 
+    console.log("here 3");
     const result: CreateSessionOutput = await createSession(input);
+    console.log("result session: ", result);
+    console.log("here 4");
     res.status(200).json(result);
   } catch (error) {
     res.status(500).send(`Error while creating session: ${error}`);

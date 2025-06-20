@@ -1,4 +1,4 @@
-import { Router } from "express";
+import { Request, Router } from "express";
 import { signupUser } from "../services/users/signupUser";
 import { loginUser } from "../services/users/loginUser";
 import {
@@ -15,6 +15,7 @@ import { getUserById } from "../services/users/getUserById";
 import { handleValidationErrors } from "../utils/handleValidationError";
 import { getSessionForUser } from "../services/users/getSessionForUser";
 import { getSessionsForProblemsByUser } from "../services/users/getSessionsForProblemsByUser";
+import { authorizer } from "../middleware/authorizer";
 
 const router = Router();
 
@@ -52,7 +53,7 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.get("/:userId", async (req, res) => {
+router.get("/:userId", authorizer, async (req, res) => {
   try {
     const input: GetUserByIdInput = {
       userId: req.params.userId,
@@ -69,7 +70,7 @@ router.get("/:userId", async (req, res) => {
   }
 });
 
-router.get("/:userId/sessions", async (req, res) => {
+router.get("/:userId/sessions", authorizer, async (req, res) => {
   try {
     const input: GetSessionsForUserInput = {
       userId: req.params.userId,
@@ -86,25 +87,29 @@ router.get("/:userId/sessions", async (req, res) => {
   }
 });
 
-router.get("/:userId/problems/:problemId/sessions", async (req, res) => {
-  try {
-    const input: GetSessionsForProblemsByUserInput = {
-      userId: req.params.userId,
-      problemId: req.params.problemId,
-    };
+router.get(
+  "/:userId/problems/:problemId/sessions",
+  authorizer,
+  async (req, res) => {
+    try {
+      const input: GetSessionsForProblemsByUserInput = {
+        userId: req.params.userId,
+        problemId: req.params.problemId,
+      };
 
-    if (!input) {
-      throw new Error("Failed to read userId or sessionId from params");
+      if (!input) {
+        throw new Error("Failed to read userId or sessionId from params");
+      }
+
+      const sessions: GetSessionsForProblemsByUserOutput =
+        await getSessionsForProblemsByUser(input);
+      res.status(200).json(sessions);
+    } catch (error) {
+      res
+        .status(500)
+        .send(`Error fetching sessions for a user for a specific problem`);
     }
-
-    const sessions: GetSessionsForProblemsByUserOutput =
-      await getSessionsForProblemsByUser(input);
-    res.status(200).json(sessions);
-  } catch (error) {
-    res
-      .status(500)
-      .send(`Error fetching sessions for a user for a specific problem`);
   }
-});
+);
 
 export default router;
