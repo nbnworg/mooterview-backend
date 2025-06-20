@@ -32,10 +32,11 @@ export const authorizer = (req: Request, res: Response, next: NextFunction) => {
     {
       algorithms: ["RS256"],
       issuer: `https://cognito-idp.${REGION}.amazonaws.com/${USER_POOL_ID}`,
-      audience: CLIENT_ID,
+      // audience: CLIENT_ID,
     },
     (err, decoded) => {
       if (err) {
+        console.error("JWT verification error:", err.message);
         res.status(403).json({ error: "Invalid or expired token" });
         return;
       }
