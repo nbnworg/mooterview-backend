@@ -1,4 +1,4 @@
-import { Request, Router } from "express";
+import { Router } from "express";
 import { signupUser } from "../services/users/signupUser";
 import { loginUser } from "../services/users/loginUser";
 import {

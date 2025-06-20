@@ -1,7 +1,4 @@
-import {
-  GetSessionsForUserInput,
-  GetSessionsForUserOutput,
-} from "mooterview-server";
+import { GetSessionsForUserInput } from "mooterview-server";
 import { handleValidationErrors } from "../../utils/handleValidationError";
 import { SESSIONS_TABLE } from "../../utils/constants";
 import { queryItemFromDB } from "../../utils/commonDynamodbMethods";
