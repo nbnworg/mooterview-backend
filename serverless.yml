@@ -116,3 +116,8 @@ functions:
           path: /prompt/response
           method: post
           cors: true
+      #auth
+      - http:
+          path: /auth/refresh
+          method: post
+          cors: true
