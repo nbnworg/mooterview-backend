@@ -1,7 +1,6 @@
 import { UpdateSessionByIdInput } from "mooterview-server";
 import { handleValidationErrors } from "../../utils/handleValidationError";
 import { SESSIONS_TABLE } from "../../utils/constants";
-import { ReturnValue } from "@aws-sdk/client-dynamodb";
 import { updateItemInDB } from "../../utils/commonDynamodbMethods";
 
 export const updateSessionById = async (input: UpdateSessionByIdInput) => {
