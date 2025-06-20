@@ -18,12 +18,10 @@ const router = Router();
 export interface CreateSessionInputType {
   userId: string;
   problemId: string;
-  // chatsQueue: [{ actor: string; message: string }];
   chatsQueue: [];
   startTime: string;
   endTime: string | undefined;
   problemStatus: string;
-  // notes: [{ content: string; timestamp: string }];
   notes: [];
 }
 // @ts-ignore
