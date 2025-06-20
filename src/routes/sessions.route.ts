@@ -1,10 +1,13 @@
-import { Router } from "express";
+import { Request, Router } from "express";
 import {
+  ChatMessage,
   CreateSessionOutput,
   DeleteSessionByIdInput,
   DeleteSessionByIdOutput,
   GetSessionByIdInput,
   GetSessionByIdOutput,
+  Note,
+  ProblemStatus,
   UpdateSessionByIdInput,
   UpdateSessionByIdOutput,
 } from "mooterview-server";
@@ -15,23 +18,25 @@ import { deleteSessionById } from "../services/sessions/deleteSessionById";
 
 const router = Router();
 
-export interface CreateSessionInputType {
+export interface CreateSessionRequest {
   userId: string;
   problemId: string;
-  chatsQueue: [];
+  chatsQueue?: ChatMessage[];
   startTime: string;
-  endTime: string | undefined;
-  problemStatus: string;
-  notes: [];
+  endTime?: string;
+  problemStatus: ProblemStatus;
+  notes?: Note[];
 }
-// @ts-ignore
-router.post("/", async (req, res) => {
+
+router.post(
+  "/",
+  async (req: Request<{}, any, CreateSessionRequest>, res) => {
   try {
     console.log("req.body: ", req.body);
 
     console.log("here 1");
 
-    const input: CreateSessionInputType = {
+    const input: CreateSessionRequest = {
       userId: req.body.userId,
       problemId: req.body.problemId,
       chatsQueue: req.body.chatsQueue || [],
@@ -41,7 +46,7 @@ router.post("/", async (req, res) => {
       notes: req.body.notes || [],
     };
 
-    const requiredFields: (keyof CreateSessionInputType)[] = [
+    const requiredFields: (keyof CreateSessionRequest)[] = [
       "userId",
       "problemId",
       "chatsQueue",
@@ -56,9 +61,10 @@ router.post("/", async (req, res) => {
     );
 
     if (missingFields.length > 0) {
-      return res.status(400).json({
+      res.status(400).json({
         message: `Missing required fields: ${missingFields.join(", ")}`,
       });
+      return;
     }
 
     console.log("here 3");
