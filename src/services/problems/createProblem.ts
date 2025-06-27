@@ -7,7 +7,7 @@ import { CreateProblemInputType } from "../../routes/problems.route";
 
 export const createProblem = async (input: CreateProblemInputType) => {
   // const validateInput = CreateProblemInput.validate(input);
-  // handleValidationErrors(validateInput);
+  // handleValidationErrors(valijkdateInput);
 
   const title = input.title!;
   const problemStatement = input.problemStatement!;
