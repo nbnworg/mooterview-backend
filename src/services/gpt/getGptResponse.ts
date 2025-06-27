@@ -1,5 +1,7 @@
 import { ChatOpenAI } from "@langchain/openai";
 import { fetchGptKey } from "./fetchGptKey";
+import { getItemFromDB } from "../../utils/commonDynamodbMethods";
+import { PROMPTS_TABLE } from "../../utils/constants";
 // import { isMessageContentComplex } from "@langchain/core/messages";
 
 // Helper to flatten MessageContentComplex[] to string (if needed)
@@ -15,7 +17,7 @@ function flattenContent(content: any): string {
   return "";
 }
 
-export async function getGptResponse(prompt: string, actor: string, context: string): Promise<string> {
+export async function getGptResponse(promptKey: string, actor: string, context: string): Promise<string> {
   const apiKey = await fetchGptKey();
 
   const llm = new ChatOpenAI({
@@ -24,12 +26,28 @@ export async function getGptResponse(prompt: string, actor: string, context: str
     modelName: "gpt-3.5-turbo",
   });
 
+  const params = {
+    TableName: PROMPTS_TABLE,
+    Key: {
+      id: promptKey
+    }
+  }
+
+  const prompt = await getItemFromDB(params);
+
+  if (!prompt) {
+    throw new Error("Problem not found");
+  }
+
+  console.log('prompt', prompt);
+  console.log('prompt.prompt', prompt.prompt)
+
   const finalPrompt = `
     You are acting as a: ${actor}
 
-    Context: ${context}
+    Context: ${prompt.prompt.replace("{context}", context)}
 
-    Given the context, this is your task: ${prompt}
+    Given the context, this is your task: ${prompt.prompt}
     `.trim();
 
   const res = await llm.invoke(finalPrompt);
