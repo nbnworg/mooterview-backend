@@ -5,13 +5,13 @@ const router = Router();
 
 router.post("/response", async (req, res) => {
   try {
-    const { prompt, actor, context } = req.body;
+    const { promptKey, actor, context } = req.body;
 
-    if (!prompt || !actor || !context) {
+    if (!promptKey || !actor || !context) {
       res.status(400).json({ message: "Missing required fields: prompt, actor, or context" });
     }
 
-    const result: any = await getGptResponse(prompt, actor, context);
+    const result: any = await getGptResponse(promptKey, actor, context);
     res.status(200).json({ response: result });
   } catch (error) {
     console.error(error);
