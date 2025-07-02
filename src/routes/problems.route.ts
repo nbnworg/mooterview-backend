@@ -14,22 +14,26 @@ const router = Router();
 
 export interface CreateProblemInputType {
   title: string;
-  problemStatement: string;
   problemDescription: string;
-  level: string;
   averageSolveTime: string | number;
-  totalUsersAttempted: string | number;
+  level: string;
+  sampleInput: string;
+  sampleOutput: string;
+  example: string;
 }
+
 
 router.post("/", async (req, res) => {
   try {
     const input: CreateProblemInputType = {
       title: req.body.title,
-      problemStatement: req.body.problemStatement,
-      problemDescription: req.body.problemDescription,
+  problemDescription: req.body.problemDescription,
+     
       level: req.body.level,
       averageSolveTime: req.body.averageSolveTime,
-      totalUsersAttempted: req.body.totalUsersAttempted,
+      sampleInput: req.body.sampleInput,
+      sampleOutput: req.body.sampleOutput,
+      example: req.body.example,
     };
 
     const result: CreateProblemOutput = await createProblem(input);
@@ -38,6 +42,7 @@ router.post("/", async (req, res) => {
     res.status(500).json({ message: `Error while creating problem: ${error}` });
   }
 });
+
 
 router.get("/", async (req, res) => {
   try {
@@ -68,3 +73,6 @@ router.get("/:problemId", async (req, res) => {
 });
 
 export default router;
+
+
+

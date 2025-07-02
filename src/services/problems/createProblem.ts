@@ -6,30 +6,38 @@ import { PROBLEMS_TABLE } from "../../utils/constants";
 import { CreateProblemInputType } from "../../routes/problems.route";
 
 export const createProblem = async (input: CreateProblemInputType) => {
-  // const validateInput = CreateProblemInput.validate(input);
-  // handleValidationErrors(validateInput);
-
-  const title = input.title!;
-  const problemStatement = input.problemStatement!;
-  const problemDescription = input.problemDescription!;
-  const level = input.level!;
-  const averageSolveTime = input.averageSolveTime!;
-  const totalUsersAttempted = input.totalUsersAttempted!;
+  const {
+    title,
+    problemDescription,
+    level,
+    averageSolveTime,
+    sampleInput,
+    sampleOutput,
+    example,
+  } = input;
 
   const problemId = `problem_${uuidv4()}`;
+  const createdAt = new Date().toISOString();
 
   const params = {
     TableName: PROBLEMS_TABLE,
     Item: {
-      problemId: problemId,
+      problemId,
       title,
-      problemStatement,
-      problemDescription,
+     problemDescription,
       level,
       averageSolveTime,
-      totalUsersAttempted,
+      sampleInput,
+      sampleOutput,
+      example,
+     
     },
   };
+
   await putItemToDB(params);
-  return { message: "Problem created successfully!", problemId };
+
+  return {
+    message: "Problem created successfully!",
+    problemId,
+  };
 };
