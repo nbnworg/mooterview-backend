@@ -17,7 +17,7 @@ function getKey(header: any, callback: any) {
     callback(null, signingKey);
   });
 }
-
+  
 export const authorizer = (req: Request, res: Response, next: NextFunction) => {
   const token = req.headers.authorization?.split(" ")[1];
 
