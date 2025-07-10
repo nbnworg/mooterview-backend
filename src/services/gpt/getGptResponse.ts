@@ -24,7 +24,7 @@ export async function getGptResponse(
   const apiKey = await fetchGptKey();
 
   if (promptKey === "needs-response") {
-    return handleNeedsResponse(context);
+    return await handleNeedsResponse(context);
   }
 
   const llm = new ChatOpenAI({
@@ -44,6 +44,12 @@ export async function getGptResponse(
 
   if (!prompt) {
     throw new Error("Problem not found");
+  }
+
+  if (!prompt.prompt) {
+    throw new Error(
+      `Prompt object is missing 'prompt' property for key: ${promptKey}`
+    );
   }
 
   console.log("prompt", prompt);
@@ -98,8 +104,13 @@ async function handleNeedsResponse(context: string): Promise<string> {
 
   Answer:`.trim();
 
-  const res = await llm.invoke(prompt);
-  const content = flattenContent(res.content);
+  try {
+    const res = await llm.invoke(prompt);
+    const content = flattenContent(res.content);
 
-  return content.toLowerCase().startsWith("y") ? "yes" : "no";
+    return content.toLowerCase().startsWith("y") ? "yes" : "no";
+  } catch (error) {
+    console.error("error in handleNeedsResponse: ", error);
+    return "no";
+  }
 }
