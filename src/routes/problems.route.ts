@@ -19,6 +19,7 @@ export interface CreateProblemInputType {
   level: string;
   averageSolveTime: string | number;
   totalUsersAttempted: string | number;
+  problemType: string;
 }
 
 router.post("/", async (req, res) => {
@@ -30,6 +31,7 @@ router.post("/", async (req, res) => {
       level: req.body.level,
       averageSolveTime: req.body.averageSolveTime,
       totalUsersAttempted: req.body.totalUsersAttempted,
+      problemType: req.body.problemType
     };
 
     const result: CreateProblemOutput = await createProblem(input);

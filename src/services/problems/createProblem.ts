@@ -15,6 +15,7 @@ export const createProblem = async (input: CreateProblemInputType) => {
   const level = input.level!;
   const averageSolveTime = input.averageSolveTime!;
   const totalUsersAttempted = input.totalUsersAttempted!;
+  const problemType = input.problemType!;
 
   const problemId = `problem_${uuidv4()}`;
 
@@ -28,6 +29,7 @@ export const createProblem = async (input: CreateProblemInputType) => {
       level,
       averageSolveTime,
       totalUsersAttempted,
+      problemType
     },
   };
   await putItemToDB(params);
