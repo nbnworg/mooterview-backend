@@ -25,13 +25,12 @@ export const createProblem = async (input: CreateProblemInputType) => {
     Item: {
       problemId,
       title,
-     problemDescription,
+      problemDescription,
       level,
       averageSolveTime,
       sampleInput,
       sampleOutput,
       example,
-     
       problemType
     },
   };
