@@ -15,7 +15,7 @@ export const createProblem = async (input: CreateProblemInputType) => {
     sampleOutput,
     example,
   } = input;
-  const problemType = input.problemType!;
+  const problemPattern = input.problemPattern!;
 
   const problemId = `problem_${uuidv4()}`;
   const createdAt = new Date().toISOString();
@@ -31,7 +31,7 @@ export const createProblem = async (input: CreateProblemInputType) => {
       sampleInput,
       sampleOutput,
       example,
-      problemType
+      problemPattern
     },
   };
 

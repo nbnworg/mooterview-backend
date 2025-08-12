@@ -26,6 +26,7 @@ export interface CreateSessionRequest {
   endTime?: string;
   problemStatus: ProblemStatus;
   notes?: Note[];
+  problemPattern: string;
 }
 
 router.post(
@@ -44,6 +45,7 @@ router.post(
       endTime: req.body.endTime || "",
       problemStatus: req.body.problemStatus,
       notes: req.body.notes || [],
+      problemPattern: req.body.problemPattern
     };
 
     const requiredFields: (keyof CreateSessionRequest)[] = [
@@ -54,6 +56,7 @@ router.post(
       "endTime",
       "problemStatus",
       "notes",
+      "problemPattern"
     ];
 
     const missingFields = requiredFields.filter(

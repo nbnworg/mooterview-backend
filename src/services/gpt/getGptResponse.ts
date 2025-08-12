@@ -23,7 +23,7 @@ export async function getGptResponse(promptKey: string, actor: string, context: 
   const llm = new ChatOpenAI({
     openAIApiKey: apiKey,
     temperature: 0.7,
-    modelName: "gpt-3.5-turbo",
+    modelName: "gpt-4o",
   });
 
   const params = {
@@ -49,6 +49,8 @@ export async function getGptResponse(promptKey: string, actor: string, context: 
 
     Given the context, this is your task: ${prompt.prompt}
     `.trim();
+
+    console.log('finalPrompt', finalPrompt);
 
   const res = await llm.invoke(finalPrompt);
 

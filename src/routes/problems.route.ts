@@ -20,7 +20,7 @@ export interface CreateProblemInputType {
   sampleInput: string;
   sampleOutput: string;
   example: string;
-  problemType: string;
+  problemPattern: string;
 }
 
 
@@ -34,7 +34,7 @@ router.post("/", async (req, res) => {
       sampleInput: req.body.sampleInput,
       sampleOutput: req.body.sampleOutput,
       example: req.body.example,
-      problemType: req.body.problemType
+      problemPattern: req.body.problemPattern
     };
 
     const result: CreateProblemOutput = await createProblem(input);
