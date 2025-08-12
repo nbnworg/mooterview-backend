@@ -87,6 +87,39 @@ router.get("/:userId/sessions", authorizer, async (req, res) => {
   }
 });
 
+
+router.get("/:userId/solved_problems", authorizer, async (req, res) => {
+  try {
+    const userId = req.params.userId;
+
+    if (!userId) {
+      throw new Error("Missing userId in request params");
+    }
+
+    const input: GetSessionsForUserInput = { userId };
+    const result: GetSessionsForUserOutput = await getSessionForUser(input);
+
+
+    const problemIds: string[] = [];
+
+    for (const session of result.sessions || []) {
+      if (session.problemId) {
+        problemIds.push(session.problemId);
+      }
+    }
+
+    const uniqueProblemIds = Array.from(new Set(problemIds));
+
+
+    res.status(200).json({uniqueProblemIds});
+
+  } catch (error) {
+    res.status(500).send(`Error fetching solved problems: ${error}`);
+  }
+});
+
+
+
 router.get(
   "/:userId/problems/:problemId/sessions",
   authorizer,

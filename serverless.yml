@@ -78,6 +78,10 @@ functions:
           method: get
           cors: true
       - http:
+          path: /users/{userId}/solved_problems
+          method: get
+          cors: true
+      - http:
           path: /users/{userId}/problems/{problemId}/sessions
           method: get
           cors: true
