@@ -38,12 +38,10 @@ export const updateSessionById = async (input: UpdateSessionByIdInput) => {
     expressionAttributeValues[":ps"] = problemStatus;
   }
 
+
   if (notes !== undefined) {
-    updateExpression.push(
-      "#nt = list_append(if_not_exists(#nt, :emptyList), :newNotes)"
-    );
+    updateExpression.push("#nt = :newNotes");
     expressionAttributeNames["#nt"] = "notes";
-    expressionAttributeValues[":emptyList"] = [];
     expressionAttributeValues[":newNotes"] = notes;
   }
 
