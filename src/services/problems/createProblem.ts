@@ -14,6 +14,7 @@ export const createProblem = async (input: CreateProblemInputType) => {
     sampleInput,
     sampleOutput,
     example,
+    problemPattern
   } = input;
 
   const problemId = `problem_${uuidv4()}`;
@@ -24,13 +25,13 @@ export const createProblem = async (input: CreateProblemInputType) => {
     Item: {
       problemId,
       title,
-     problemDescription,
+      problemDescription,
       level,
       averageSolveTime,
       sampleInput,
       sampleOutput,
       example,
-     
+      problemPattern
     },
   };
 
