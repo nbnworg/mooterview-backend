@@ -10,7 +10,7 @@ export const createSession = async (input: any) => {
   const endTime = input.endTime! || "";
   const problemStatus = input.problemStatus!;
   const notes = input.notes! || [];
-  const problemPattern = input.notes! || [];
+  const problemPattern = input.problemPattern! || [];
 
   const sessionId = `session_${uuidv4()}`;
 
