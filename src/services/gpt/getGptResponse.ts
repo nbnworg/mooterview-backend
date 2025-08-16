@@ -17,13 +17,13 @@ function flattenContent(content: any): string {
   return "";
 }
 
-export async function getGptResponse(promptKey: string, actor: string, context: string): Promise<string> {
+export async function getGptResponse(promptKey: string, actor: string, context: string, modelType: string): Promise<string> {
   const apiKey = await fetchGptKey();
 
   const llm = new ChatOpenAI({
     openAIApiKey: apiKey,
     temperature: 0.7,
-    modelName: "gpt-4o",
+    modelName: modelType,
   });
 
   const params = {
