@@ -59,6 +59,7 @@ functions:
   app:
     name: ${self:custom.functionNames.${opt:stage, 'sandbox'}}
     handler: dist/app.handler
+    timeout: 15
     events:
       # users
       - http:
