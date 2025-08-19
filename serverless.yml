@@ -121,6 +121,10 @@ functions:
           path: /prompt/response
           method: post
           cors: true
+      - http:
+          path: /prompt/verify-approach
+          method: post
+          cors: true
       #auth
       - http:
           path: /auth/refresh
