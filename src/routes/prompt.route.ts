@@ -1,5 +1,7 @@
 import { Router } from "express";
 import { getGptResponse } from "../services/gpt/getGptResponse";
+import { verifyApproach } from "../services/gpt/verifyApproach"; 
+
 
 const router = Router();
 
@@ -18,5 +20,20 @@ router.post("/response", async (req, res) => {
     res.status(500).json({ message: `Error getting response: ${error}` });
   }
 });
+
+router.post("/verify-approach", async (req, res) => {
+  try {
+    const { approach, code, problemTitle } = req.body;
+    if (!approach || !code || !problemTitle) {
+      return res.status(400).json({ message: "Missing required fields" });
+    }
+    const result = await verifyApproach(approach, code, problemTitle);
+    res.status(200).json(result);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: `Error verifying approach: ${error}` });
+  }
+});
+
 
 export default router;
