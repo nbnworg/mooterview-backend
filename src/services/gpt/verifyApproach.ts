@@ -31,7 +31,14 @@ export const verifyApproach = async (approach: string, code: string, problemTitl
   `;
 
   const response = await llm.invoke(directComparisonPrompt);
-  const parsedResponse = JSON.parse(response.content as string);
+  let parsedResponse;
+  try {
+    parsedResponse = JSON.parse(response.content as string);
+  } catch (err) {
+    throw new Error(
+      `Failed to parse LLM response as JSON. Response content: ${response.content}. Error: ${err instanceof Error ? err.message : String(err)}`
+    );
+  }
 
   return {
     alignment: parsedResponse.alignment_decision,
