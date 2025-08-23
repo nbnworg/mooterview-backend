@@ -24,7 +24,11 @@ router.post("/response", async (req, res) => {
 router.post("/verify-approach", async (req, res) => {
   try {
     const { approach, code, problemTitle } = req.body;
-    if (!approach || !code || !problemTitle) {
+    if (
+      typeof approach !== "string" || approach.trim() === "" ||
+      typeof code !== "string" || code.trim() === "" ||
+      typeof problemTitle !== "string" || problemTitle.trim() === ""
+    ) {
       return res.status(400).json({ message: "Missing required fields" });
     }
     const result = await verifyApproach(approach, code, problemTitle);
