@@ -2,7 +2,6 @@ import { ChatOpenAI } from "@langchain/openai";
 import { fetchGptKey } from "./fetchGptKey";
 import { getItemFromDB } from "../../utils/commonDynamodbMethods";
 import { PROMPTS_TABLE } from "../../utils/constants";
-// import { isMessageContentComplex } from "@langchain/core/messages";
 
 // Helper to flatten MessageContentComplex[] to string (if needed)
 function flattenContent(content: any): string {
@@ -36,18 +35,16 @@ export async function getGptResponse(promptKey: string, actor: string, context: 
   const prompt = await getItemFromDB(params);
 
   if (!prompt) {
-    throw new Error("Problem not found");
-  }
-
+    throw new Error(`Prompt with key "${promptKey}" not found in prompts table.`);
+  }  
+  
   console.log('prompt', prompt);
   console.log('prompt.prompt', prompt.prompt)
 
   const finalPrompt = `
     You are acting as a: ${actor}
 
-    Context: ${prompt.prompt.replace("{context}", context)}
-
-    Given the context, this is your task: ${prompt.prompt}
+    ${prompt.prompt.replace("{context}", context)}
     `.trim();
 
     console.log('finalPrompt', finalPrompt);
