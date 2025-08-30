@@ -41,13 +41,12 @@ export async function getGptResponse(promptKey: string, actor: string, context: 
   console.log('prompt', prompt);
   console.log('prompt.prompt', prompt.prompt)
 
+
   const finalPrompt = `
     You are acting as a: ${actor}
 
     ${prompt.prompt.replace("{context}", context)}
     `.trim();
-
-    console.log('finalPrompt', finalPrompt);
 
   const res = await llm.invoke(finalPrompt);
 

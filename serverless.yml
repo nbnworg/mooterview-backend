@@ -75,6 +75,10 @@ functions:
           method: get
           cors: true
       - http:
+          path: /users/updateStreak/{userId}
+          method: patch
+          cors: true
+      - http:
           path: /users/{userId}/sessions
           method: get
           cors: true

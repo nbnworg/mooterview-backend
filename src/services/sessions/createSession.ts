@@ -14,7 +14,6 @@ export const createSession = async (input: any) => {
 
   const sessionId = `session_${uuidv4()}`;
 
-  console.log("sessionId: ", sessionId);
   const params = {
     TableName: SESSIONS_TABLE,
     Item: {
@@ -29,10 +28,7 @@ export const createSession = async (input: any) => {
       problemPattern
     },
   };
-
-  console.log("before putting to dydb")
   
   await putItemToDB(params);
-  console.log("after putting to dydb")
   return { message: "Session created successfully!", sessionId };
 };
