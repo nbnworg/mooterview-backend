@@ -21,7 +21,6 @@ export const updateUserById = async (input: GetUserByIdInput) => {
     let currentStreak = userData.currentStreak || 0;
     let longestStreak = userData.longestStreak || 0;
     let lastActiveDate = userData.lastActiveDate || "";
-    console.log('currentStreak, longestStreak, lastActiveDate', currentStreak, longestStreak, lastActiveDate);
     
     if (lastActiveDate === todayStr) {
 
@@ -48,8 +47,6 @@ export const updateUserById = async (input: GetUserByIdInput) => {
         },
         ReturnValues: "ALL_NEW",
     }
-
-    console.log('update_params', update_params);
 
     await updateItemInDB(update_params);
     return { message: "Streak updated successfully" };

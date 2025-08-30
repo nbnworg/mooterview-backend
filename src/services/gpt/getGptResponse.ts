@@ -39,9 +39,6 @@ export async function getGptResponse(promptKey: string, actor: string, context: 
     throw new Error("Problem not found");
   }
 
-  console.log('prompt', prompt);
-  console.log('prompt.prompt', prompt.prompt)
-
   const finalPrompt = `
     You are acting as a: ${actor}
 
@@ -49,8 +46,6 @@ export async function getGptResponse(promptKey: string, actor: string, context: 
 
     Given the context, this is your task: ${prompt.prompt}
     `.trim();
-
-    console.log('finalPrompt', finalPrompt);
 
   const res = await llm.invoke(finalPrompt);
 
