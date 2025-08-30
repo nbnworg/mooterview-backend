@@ -16,6 +16,7 @@ import { handleValidationErrors } from "../utils/handleValidationError";
 import { getSessionForUser } from "../services/users/getSessionForUser";
 import { getSessionsForProblemsByUser } from "../services/users/getSessionsForProblemsByUser";
 import { authorizer } from "../middleware/authorizer";
+import { updateUserById } from "../services/users/updateUserById";
 
 const router = Router();
 
@@ -50,6 +51,23 @@ router.post("/login", async (req, res) => {
     res.status(200).json(result);
   } catch (error) {
     res.status(500).send(`Error while login: ${error}`);
+  }
+});
+
+router.patch("/updateStreak/:userId", async (req, res) => {
+  try {
+    const input: GetUserByIdInput = {
+      userId: req.params.userId,
+    };
+
+    const validationOutput = GetUserByIdInput.validate(input);
+    handleValidationErrors(validationOutput);
+
+    const result = await updateUserById(input);
+
+    res.status(200).json({ result });
+  } catch (error) {
+    res.status(500).send(`Error fetching user details: ${error}`);
   }
 });
 

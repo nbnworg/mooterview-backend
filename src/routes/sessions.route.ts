@@ -33,10 +33,6 @@ router.post(
   "/",
   async (req: Request<{}, any, CreateSessionRequest>, res) => {
   try {
-    console.log("req.body: ", req.body);
-
-    console.log("here 1");
-
     const input: CreateSessionRequest = {
       userId: req.body.userId,
       problemId: req.body.problemId,
@@ -70,10 +66,7 @@ router.post(
       return;
     }
 
-    console.log("here 3");
     const result: CreateSessionOutput = await createSession(input);
-    console.log("result session: ", result);
-    console.log("here 4");
     res.status(200).json(result);
   } catch (error) {
     res.status(500).send(`Error while creating session: ${error}`);
