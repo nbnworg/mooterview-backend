@@ -54,7 +54,7 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.patch("/updateStreak/:userId", authorizer, async (req, res) => {
+router.patch("/updateStreak/:userId", async (req, res) => {
   try {
     const input: GetUserByIdInput = {
       userId: req.params.userId,
