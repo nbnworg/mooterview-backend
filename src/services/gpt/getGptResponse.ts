@@ -23,7 +23,7 @@ export async function getGptResponse(
   actor: string,
   context: string,
   modelType: string,
-  userId: string
+  userId?: string
 ): Promise<string> {
 
   const apiKey = await fetchGptKey();
@@ -45,8 +45,8 @@ export async function getGptResponse(
 
   if (!prompt) {
     throw new Error(`Prompt with key "${promptKey}" not found in prompts table.`);
-  }  
-  
+  }
+
   console.log('prompt', prompt);
   console.log('prompt.prompt', prompt.prompt)
 

@@ -23,7 +23,7 @@ router.post("/response", async (req, res) => {
 
 router.post("/summarize", async (req, res) => {
   try {
-    const { chatHistory } = req.body;
+    const { chatHistory,userId } = req.body;
     if (!chatHistory) {
       return res.status(400).json({ message: "Missing chatHistory field" });
     }
@@ -32,7 +32,8 @@ router.post("/summarize", async (req, res) => {
       "summarize-conversation",
       "System",
       JSON.stringify(chatHistory),
-      "gpt-4o"
+      "gpt-4o",
+      userId
     );
 
     res.status(200).json({ summary });
