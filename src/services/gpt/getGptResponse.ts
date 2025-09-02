@@ -44,15 +44,17 @@ export async function getGptResponse(
   const prompt = await getItemFromDB(params);
 
   if (!prompt) {
-    throw new Error("Problem not found");
-  }
+    throw new Error(`Prompt with key "${promptKey}" not found in prompts table.`);
+  }  
+  
+  console.log('prompt', prompt);
+  console.log('prompt.prompt', prompt.prompt)
+
 
   const finalPrompt = `
     You are acting as a: ${actor}
 
-    Context: ${prompt.prompt.replace("{context}", context)}
-
-    Given the context, this is your task: ${prompt.prompt}
+    ${prompt.prompt.replace("{context}", context)}
     `.trim();
 
   const inputTokens = countTokens(finalPrompt, modelType);
