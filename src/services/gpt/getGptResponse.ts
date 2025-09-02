@@ -1,8 +1,9 @@
 import { ChatOpenAI } from "@langchain/openai";
 import { fetchGptKey } from "./fetchGptKey";
-import { getItemFromDB } from "../../utils/commonDynamodbMethods";
-import { PROMPTS_TABLE } from "../../utils/constants";
+import { getItemFromDB, updateItemInDB } from "../../utils/commonDynamodbMethods";
+import { PROMPTS_TABLE, USERS_TABLE } from "../../utils/constants";
 // import { isMessageContentComplex } from "@langchain/core/messages";
+import { countTokens } from "../../utils/tokenCounter";
 
 // Helper to flatten MessageContentComplex[] to string (if needed)
 function flattenContent(content: any): string {
@@ -17,7 +18,14 @@ function flattenContent(content: any): string {
   return "";
 }
 
-export async function getGptResponse(promptKey: string, actor: string, context: string, modelType: string): Promise<string> {
+export async function getGptResponse(
+  promptKey: string,
+  actor: string,
+  context: string,
+  modelType: string,
+  userId: string
+): Promise<string> {
+
   const apiKey = await fetchGptKey();
 
   const llm = new ChatOpenAI({
@@ -47,9 +55,32 @@ export async function getGptResponse(promptKey: string, actor: string, context: 
     Given the context, this is your task: ${prompt.prompt}
     `.trim();
 
-  const res = await llm.invoke(finalPrompt);
+  const inputTokens = countTokens(finalPrompt, modelType);
 
+  const res = await llm.invoke(finalPrompt);
   // Normalize content
   const content = flattenContent(res.content);
+
+  const outputTokens = countTokens(content, modelType);
+
+  if (userId) {
+    try {
+      const updateParams = {
+        TableName: USERS_TABLE,
+        Key: { userId },
+        UpdateExpression: "ADD totalInputTokens :it, totalOutputTokens :ot",
+        ExpressionAttributeValues: {
+          ":it": inputTokens,
+          ":ot": outputTokens
+        },
+        ReturnValues: "ALL_NEW",
+      };
+
+      await updateItemInDB(updateParams);
+    } catch (error) {
+      console.error("Failed to update user token counts:", error);
+    }
+  }
+
   return content;
 }

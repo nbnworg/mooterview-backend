@@ -1,7 +1,10 @@
 import { ChatOpenAI } from "@langchain/openai";
 import { fetchGptKey } from "./fetchGptKey";
+import { updateItemInDB } from "../../utils/commonDynamodbMethods";
+import { USERS_TABLE } from "../../utils/constants";
+import { countTokens } from "../../utils/tokenCounter";
 
-export const verifyApproach = async (approach: string, code: string, problemTitle: string) => {
+export const verifyApproach = async (approach: string, code: string, problemTitle: string, userId: string) => {
   const apiKey = await fetchGptKey();
   const llm = new ChatOpenAI({
     openAIApiKey: apiKey,
@@ -29,8 +32,29 @@ export const verifyApproach = async (approach: string, code: string, problemTitl
         - If it is a "MATCH", provide a brief, positive confirmation.
     Return your final output as a single JSON object with the following snake_case keys: "alignment_decision" (string: "MATCH" or "MISMATCH") and "feedback" (string).
   `;
-
+  const inputTokens = countTokens(directComparisonPrompt, "gpt-4o");
   const response = await llm.invoke(directComparisonPrompt);
+  const outputTokens = countTokens(response.content as string, "gpt-4o");
+
+  // Update user token counts in DynamoDB 
+  if (userId) {
+    try {
+      const updateParams = {
+        TableName: USERS_TABLE,
+        Key: { userId },
+        UpdateExpression: "ADD totalInputTokens :it, totalOutputTokens :ot",
+        ExpressionAttributeValues: {
+          ":it": inputTokens,
+          ":ot": outputTokens
+        },
+        ReturnValues: "ALL_NEW",
+      };
+      await updateItemInDB(updateParams);
+    } catch (error) {
+      console.error("Failed to update user token counts:", error);
+    }
+  }
+
   let parsedResponse;
   try {
     parsedResponse = JSON.parse(response.content as string);
