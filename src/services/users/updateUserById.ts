@@ -27,7 +27,7 @@ export const updateUserById = async (input: GetUserByIdInput) => {
     } else if (lastActiveDate === yesterdayStr) {
         currentStreak += 1;
     } else {
-        currentStreak = 1;
+        currentStreak = 0;
     }
 
     if (currentStreak > longestStreak) {
