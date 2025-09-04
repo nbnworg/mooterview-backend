@@ -26,6 +26,7 @@ export const updateUserById = async (input: GetUserByIdInput) => {
 
     } else if (lastActiveDate === yesterdayStr) {
         currentStreak += 1;
+        lastActiveDate = todayStr;
     } else {
         currentStreak = 0;
     }
@@ -34,7 +35,6 @@ export const updateUserById = async (input: GetUserByIdInput) => {
         longestStreak = currentStreak;
     }
 
-    lastActiveDate = todayStr;
 
     const update_params = {
         TableName: USERS_TABLE,
