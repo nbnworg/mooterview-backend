@@ -18,6 +18,18 @@ function flattenContent(content: any): string {
   return "";
 }
 
+const shouldResetTokens = (startDate: string | undefined): boolean => {
+  if (!startDate) return true;
+
+  const start = new Date(startDate);
+  const now = new Date();
+  
+  const diffTime = Math.abs(now.getTime() - start.getTime());
+  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+  return diffDays >= 30;
+};
+
 export async function getGptResponse(
   promptKey: string,
   actor: string,
@@ -67,14 +79,46 @@ export async function getGptResponse(
 
   if (userId) {
     try {
+
+      const userParams = {
+        TableName: USERS_TABLE,
+        Key: { userId }
+      };
+
+      const user = await getItemFromDB(userParams);
+      const now = new Date().toISOString();
+
+      let updateExpression: string;
+      let expressionAttributeValues: any;
+
+      if (shouldResetTokens(user?.tokenTrackingStartDate)) {
+        updateExpression = `
+          SET totalInputTokens = :it, 
+              totalOutputTokens = :ot,
+              tokenTrackingStartDate = :startDate
+        `;
+        
+        expressionAttributeValues = {
+          ":it": inputTokens,
+          ":ot": outputTokens,
+          ":startDate": now
+        };
+      } else {
+        updateExpression = `
+          ADD totalInputTokens :it, totalOutputTokens :ot
+        `;
+        
+        expressionAttributeValues = {
+          ":it": inputTokens,
+          ":ot": outputTokens
+        };
+      }
+
       const updateParams = {
         TableName: USERS_TABLE,
         Key: { userId },
-        UpdateExpression: "ADD totalInputTokens :it, totalOutputTokens :ot",
-        ExpressionAttributeValues: {
-          ":it": inputTokens,
-          ":ot": outputTokens
-        },
+        UpdateExpression: updateExpression,
+        ExpressionAttributeValues: expressionAttributeValues,
         ReturnValues: "ALL_NEW",
       };
 

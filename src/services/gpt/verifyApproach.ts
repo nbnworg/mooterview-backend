@@ -1,8 +1,20 @@
 import { ChatOpenAI } from "@langchain/openai";
 import { fetchGptKey } from "./fetchGptKey";
-import { updateItemInDB } from "../../utils/commonDynamodbMethods";
+import { updateItemInDB,getItemFromDB } from "../../utils/commonDynamodbMethods";
 import { USERS_TABLE } from "../../utils/constants";
 import { countTokens } from "../../utils/tokenCounter";
+
+const shouldResetTokens = (startDate: string | undefined): boolean => {
+  if (!startDate) return true;
+
+  const start = new Date(startDate);
+  const now = new Date();
+
+  const diffTime = Math.abs(now.getTime() - start.getTime());
+  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+  return diffDays >= 30;
+};
 
 export const verifyApproach = async (approach: string, code: string, problemTitle: string, userId: string) => {
   const apiKey = await fetchGptKey();
@@ -39,16 +51,49 @@ export const verifyApproach = async (approach: string, code: string, problemTitl
   // Update user token counts in DynamoDB 
   if (userId) {
     try {
+
+      const userParams = {
+        TableName: USERS_TABLE,
+        Key: { userId }
+      };
+
+      const user = await getItemFromDB(userParams);
+      const now = new Date().toISOString();
+
+      let updateExpression: string;
+      let expressionAttributeValues: any;
+
+      if (shouldResetTokens(user?.tokenTrackingStartDate)) {
+        updateExpression = `
+           SET totalInputTokens = :it, 
+               totalOutputTokens = :ot,
+               tokenTrackingStartDate = :startDate
+         `;
+
+        expressionAttributeValues = {
+          ":it": inputTokens,
+          ":ot": outputTokens,
+          ":startDate": now
+        };
+      } else {
+        updateExpression = `
+           ADD totalInputTokens :it, totalOutputTokens :ot
+         `;
+
+        expressionAttributeValues = {
+          ":it": inputTokens,
+          ":ot": outputTokens
+        };
+      }
+
       const updateParams = {
         TableName: USERS_TABLE,
         Key: { userId },
-        UpdateExpression: "ADD totalInputTokens :it, totalOutputTokens :ot",
-        ExpressionAttributeValues: {
-          ":it": inputTokens,
-          ":ot": outputTokens
-        },
+        UpdateExpression: updateExpression,
+        ExpressionAttributeValues: expressionAttributeValues,
         ReturnValues: "ALL_NEW",
       };
+
       await updateItemInDB(updateParams);
     } catch (error) {
       console.error("Failed to update user token counts:", error);
