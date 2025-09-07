@@ -1,7 +1,22 @@
 import { ChatOpenAI } from "@langchain/openai";
 import { fetchGptKey } from "./fetchGptKey";
+import { updateItemInDB,getItemFromDB } from "../../utils/commonDynamodbMethods";
+import { USERS_TABLE } from "../../utils/constants";
+import { countTokens } from "../../utils/tokenCounter";
 
-export const verifyApproach = async (approach: string, code: string, problemTitle: string) => {
+const shouldResetTokens = (startDate: string | undefined): boolean => {
+  if (!startDate) return true;
+
+  const start = new Date(startDate);
+  const now = new Date();
+
+  const diffTime = Math.abs(now.getTime() - start.getTime());
+  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+  return diffDays >= 30;
+};
+
+export const verifyApproach = async (approach: string, code: string, problemTitle: string, userId: string) => {
   const apiKey = await fetchGptKey();
   const llm = new ChatOpenAI({
     openAIApiKey: apiKey,
@@ -29,8 +44,62 @@ export const verifyApproach = async (approach: string, code: string, problemTitl
         - If it is a "MATCH", provide a brief, positive confirmation.
     Return your final output as a single JSON object with the following snake_case keys: "alignment_decision" (string: "MATCH" or "MISMATCH") and "feedback" (string).
   `;
-
+  const inputTokens = countTokens(directComparisonPrompt, "gpt-4o");
   const response = await llm.invoke(directComparisonPrompt);
+  const outputTokens = countTokens(response.content as string, "gpt-4o");
+
+  // Update user token counts in DynamoDB 
+  if (userId) {
+    try {
+
+      const userParams = {
+        TableName: USERS_TABLE,
+        Key: { userId }
+      };
+
+      const user = await getItemFromDB(userParams);
+      const now = new Date().toISOString();
+
+      let updateExpression: string;
+      let expressionAttributeValues: any;
+
+      if (shouldResetTokens(user?.tokenTrackingStartDate)) {
+        updateExpression = `
+           SET totalInputTokens = :it, 
+               totalOutputTokens = :ot,
+               tokenTrackingStartDate = :startDate
+         `;
+
+        expressionAttributeValues = {
+          ":it": inputTokens,
+          ":ot": outputTokens,
+          ":startDate": now
+        };
+      } else {
+        updateExpression = `
+           ADD totalInputTokens :it, totalOutputTokens :ot
+         `;
+
+        expressionAttributeValues = {
+          ":it": inputTokens,
+          ":ot": outputTokens
+        };
+      }
+
+      const updateParams = {
+        TableName: USERS_TABLE,
+        Key: { userId },
+        UpdateExpression: updateExpression,
+        ExpressionAttributeValues: expressionAttributeValues,
+        ReturnValues: "ALL_NEW",
+      };
+
+      await updateItemInDB(updateParams);
+    } catch (error) {
+      console.error("Failed to update user token counts:", error);
+    }
+  }
+
   let parsedResponse;
   try {
     parsedResponse = JSON.parse(response.content as string);

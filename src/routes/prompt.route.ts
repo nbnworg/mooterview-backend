@@ -1,19 +1,19 @@
 import { Router } from "express";
 import { getGptResponse } from "../services/gpt/getGptResponse";
-import { verifyApproach } from "../services/gpt/verifyApproach"; 
+import { verifyApproach } from "../services/gpt/verifyApproach";
 
 
 const router = Router();
 
 router.post("/response", async (req, res) => {
   try {
-    const { promptKey, actor, context, modelName } = req.body;
+    const { promptKey, actor, context, modelName, userId } = req.body;
 
     if (!promptKey || !actor || !context) {
       res.status(400).json({ message: "Missing required fields: prompt, actor, or context" });
     }
 
-    const result: any = await getGptResponse(promptKey, actor, context, modelName);
+    const result: any = await getGptResponse(promptKey, actor, context, modelName, userId);
     res.status(200).json({ response: result });
   } catch (error) {
     console.error(error);
@@ -23,7 +23,7 @@ router.post("/response", async (req, res) => {
 
 router.post("/summarize", async (req, res) => {
   try {
-    const { chatHistory } = req.body;
+    const { chatHistory,userId } = req.body;
     if (!chatHistory) {
       return res.status(400).json({ message: "Missing chatHistory field" });
     }
@@ -32,7 +32,8 @@ router.post("/summarize", async (req, res) => {
       "summarize-conversation",
       "System",
       JSON.stringify(chatHistory),
-      "gpt-4o"
+      "gpt-4o",
+      userId
     );
 
     res.status(200).json({ summary });
@@ -45,7 +46,7 @@ router.post("/summarize", async (req, res) => {
 
 router.post("/verify-approach", async (req, res) => {
   try {
-    const { approach, code, problemTitle } = req.body;
+    const { approach, code, problemTitle, userId } = req.body;
     if (
       typeof approach !== "string" || approach.trim() === "" ||
       typeof code !== "string" || code.trim() === "" ||
@@ -53,7 +54,7 @@ router.post("/verify-approach", async (req, res) => {
     ) {
       return res.status(400).json({ message: "Missing required fields" });
     }
-    const result = await verifyApproach(approach, code, problemTitle);
+    const result = await verifyApproach(approach, code, problemTitle, userId);
     res.status(200).json(result);
   } catch (error) {
     console.error(error);
