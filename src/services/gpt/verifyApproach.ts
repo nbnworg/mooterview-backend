@@ -35,15 +35,16 @@ export const verifyApproach = async (approach: string, code: string, problemTitl
     ${code}
     """
     Follow these steps to make your determination:
-    1.  **Deconstruct the APPROACH**: Identify the core algorithm (e.g., recursion, iteration, two-pointer), key data structures (e.g., hash map, heap, stack), and any mentioned time/space complexity goals.
+    1.  **Deconstruct the APPROACH**: Identify the core algorithmic idea (e.g., recursion, iteration, two-pointer), the intended use of data structures (e.g., hash map, heap, stack), and any mentioned time/space complexity goals. Focus on the *intended strategy*, not just specific keywords.
     2.  **Deconstruct the CODE**: Analyze the implementation to identify the actual algorithm, data structures used, and the resulting time/space complexity.
-    3.  **Compare and Contrast**: Directly compare your findings. Note any significant deviations. Did they propose an optimal solution but implement a brute-force one? Did they mention a specific data structure but fail to use it? Is the complexity different?
+    3.  **Compare and Contrast**: Directly compare your findings. Look for meaningful alignment or deviation between the intended strategy and the implemented one. Do not over-weight exact wording; prioritize whether the conceptual approach in the description is genuinely reflected in the code.
     4.  **Make a Final Decision**: Based on the comparison, decide if the implementation is a "MATCH" or a "MISMATCH". A strong conceptual and structural similarity is required for a "MATCH".
     5.  **Provide Feedback**:
         - If it is a "MISMATCH", provide a concise, helpful explanation of the primary deviation. Be encouraging but clear. DO NOT provide the correct code.
         - If it is a "MATCH", provide a brief, positive confirmation.
     Return your final output as a single JSON object with the following snake_case keys: "alignment_decision" (string: "MATCH" or "MISMATCH") and "feedback" (string).
   `;
+
   const inputTokens = countTokens(directComparisonPrompt, "gpt-4o");
   const response = await llm.invoke(directComparisonPrompt);
   const outputTokens = countTokens(response.content as string, "gpt-4o");
