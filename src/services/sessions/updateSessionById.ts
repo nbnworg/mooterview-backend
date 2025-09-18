@@ -13,7 +13,7 @@ export const updateSessionById = async (input: UpdateSessionByIdInput) => {
   const problemStatus = input.problemStatus!;
   const notes = input.notes!;
 
-  const updateExpression = [];
+  const updateExpression: string[] = [];
   const expressionAttributeNames: Record<string, any> = {};
   const expressionAttributeValues: Record<string, any> = {};
 
@@ -38,11 +38,17 @@ export const updateSessionById = async (input: UpdateSessionByIdInput) => {
     expressionAttributeValues[":ps"] = problemStatus;
   }
 
-
   if (notes !== undefined) {
+    const cleanedNotes = notes.filter(
+      (note) =>
+        note &&
+        typeof note.content === "string" &&
+        note.content.trim() !== ""
+    );
+
     updateExpression.push("#nt = :newNotes");
     expressionAttributeNames["#nt"] = "notes";
-    expressionAttributeValues[":newNotes"] = notes;
+    expressionAttributeValues[":newNotes"] = cleanedNotes;
   }
 
   if (updateExpression.length === 0) {

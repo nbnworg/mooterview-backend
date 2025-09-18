@@ -18,15 +18,22 @@ export const signupUser = async (userInput: CreateUserInput) => {
   const location = userInput.location!;
 
   const userId = await createCognitoUser(email, email, password);
-  const currentDate = new Date().toISOString();
 
   const params = {
     TableName: USERS_TABLE,
     Item: {
-      userId, username, email, fullName, location,
-      tokenTrackingStartDate: currentDate,
+      userId,
+      username,
+      email,
+      fullName,
+      location,
+      tokenTrackingStartDate: new Date().toISOString(),
       totalInputTokens: 0,
-      totalOutputTokens: 0 },
+      totalOutputTokens: 0,
+      currentStreak: 0,
+      longestStreak: 0,
+      lastActiveDate: null,
+    },
   };
   await putItemToDB(params);
 
