@@ -18,26 +18,20 @@ export const updateUserById = async (input: GetUserByIdInput) => {
   let longestStreak = userData.longestStreak || 0;
 
   if (lastActive) {
-    const diffHours = (now.getTime() - lastActive.getTime()) / (1000 * 60 * 60);
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const lastActiveDay = new Date(lastActive.getFullYear(), lastActive.getMonth(), lastActive.getDate());
 
-    if (diffHours > 48) {
-      currentStreak = 1; 
-    } else if (diffHours > 24) {
-      
-      const isSameDay = now.toDateString() !== lastActive.toDateString();
-      if (isSameDay) {
-        currentStreak += 1;
-      }
-    } else {
-      
-      if (now.toDateString() !== lastActive.toDateString()) {
-        currentStreak += 1;
-      } else if (currentStreak === 0) {
+    const diffTime = today.getTime() - lastActiveDay.getTime();
+    const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
+
+    if (diffDays === 1) {
+      currentStreak += 1;
+    } else if (diffDays > 1) {
+      currentStreak = 1;
+    } else if (diffDays === 0 && currentStreak === 0) {
         currentStreak = 1;
-      }
     }
   } else {
-    
     currentStreak = 1;
   }
 
