@@ -1,17 +1,17 @@
 export function handleValidationErrors(validationOutput: any) {
   if (validationOutput.length > 0) {
-    console.log("Validation Errors:");
+    const errors: Record<string, string> = {};
+
     validationOutput.forEach((element: any) => {
-      console.log(`Constraint Type: ${element.constraintType}`);
-      console.log(`Path: ${element.path}`);
+      const field = element.path || "unknown";
+      const message = element.constraintType || "Invalid input";
+      errors[field] = message;
     });
 
-    throw new Error(
-      `Request had validation errors: ${JSON.stringify(
-        validationOutput,
-        null,
-        2
-      )}`
-    );
+    // Instead of throwing a generic error, throwing a structured one
+    const error: any = new Error("Validation failed");
+    error.statusCode = 400; // Bad Request
+    error.details = errors;
+    throw error;
   }
 }
